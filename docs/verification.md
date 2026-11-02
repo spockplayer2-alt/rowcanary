@@ -32,6 +32,12 @@ completed successfully for the initial public source commit `b1e25b4`:
 - All 17 jobs completed with conclusion `success`. Release publication is also
   gated on successful checks for the final release commit.
 
+The final baseline uses `macos-15-intel` alongside `ubuntu-latest` and
+`windows-latest`. A later `macos-latest` job waited without a runner or executed
+steps, including after a retry; it was cancelled before switching the baseline
+to the documented macOS 15 x64 image. The earlier complete `macos-latest` run
+above remains evidence for that image. No failing test was bypassed.
+
 Coverage includes UTF-8/BOM and invalid bytes; CSV quoting, commas, semicolon,
 pipe and tab delimiters; Unicode and output under ASCII/cp1252; exact CR/LF/CRLF
 cell differences; empty versus absent values; JSON numeric types/precision,
