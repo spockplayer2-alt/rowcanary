@@ -14,8 +14,23 @@ each environment below: 650 successful test executions in total.
 | Native Windows | 3.10.20, 3.11.15, 3.12.11, 3.13.15, 3.14.0 | 65/65 in each |
 | Linux, official Python slim Docker images, Debian 13 | 3.10.22, 3.11.18, 3.12.16, 3.13.18, 3.14.10 | 65/65 in each |
 
-The Linux tests ran with a read-only source mount and container networking
-disabled. Native macOS and GitHub-hosted runners were not executed.
+The local Linux tests ran with a read-only source mount and container networking
+disabled. Hosted Ubuntu, Windows and macOS checks are recorded separately below.
+
+## Hosted GitHub Actions
+
+[Checks run 41518655748](https://github.com/spockplayer2-alt/rowcanary/actions/runs/41518655748)
+completed successfully for the initial public source commit `b1e25b4`:
+
+- Ubuntu, Windows and macOS, each with Python 3.10, 3.11, 3.12, 3.13 and 3.14:
+  all 15 test jobs passed, with 65 tests in each job and no skips (975 successful
+  hosted test executions).
+- The package job passed Ruff, isolated sdist/wheel builds, Twine, distribution
+  inspection and an installed-wheel smoke test outside the checkout.
+- The assets job rendered and validated every SVG and confirmed all PNG exports
+  against their vector masters on Ubuntu.
+- All 17 jobs completed with conclusion `success`. Release publication is also
+  gated on successful checks for the final release commit.
 
 Coverage includes UTF-8/BOM and invalid bytes; CSV quoting, commas, semicolon,
 pipe and tab delimiters; Unicode and output under ASCII/cp1252; exact CR/LF/CRLF
@@ -67,16 +82,15 @@ compared as data; no spreadsheet or formula engine was executed.
 
 ## Pending or outside verified scope
 
-- Native macOS, Ubuntu runners and all GitHub Actions runs. Configured jobs do
-  not count as executed checks. The verified Linux environment is Debian Docker.
 - Live round trips through Excel, Google Sheets, CRMs or other applications.
 - A process-memory ceiling: JSON objects/reports consume memory beyond the
   32 MiB byte cap; JSON row count is checked after parsing.
 - Complete protection against concurrent hostile replacement of filesystem
   parent directories/reparse points; see [limitations](limitations.md).
-- GitHub-hosted checks and public release URLs will be recorded after the
-  hosted checks complete. A release is published only after every required
-  job succeeds.
+- Public source and workflow history are available in the
+  [repository](https://github.com/spockplayer2-alt/rowcanary). Versioned packages,
+  checksums and release notes are provided through the
+  [v0.1.0 release](https://github.com/spockplayer2-alt/rowcanary/releases/tag/v0.1.0).
 - PyPI upload, external security certification, name/trademark clearance and
   verification of future Python versions are not included.
 

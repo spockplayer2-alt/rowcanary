@@ -34,3 +34,14 @@ Distribution files: `rowcanary-0.1.0-py3-none-any.whl` and
 `python -m pip install ./rowcanary-0.1.0-py3-none-any.whl`.
 
 No PyPI publication is included in this release.
+
+## Verification
+
+The hosted [Checks workflow](https://github.com/spockplayer2-alt/rowcanary/actions/workflows/tests.yml)
+covers Ubuntu, Windows and macOS on Python 3.10–3.14. All 15 matrix jobs passed
+with 65 tests each and no skips; packaging/static checks and vector/PNG checks
+also passed. The distributions were built and inspected, then installed into
+clean environments and exercised outside the checkout.
+
+The attached `SHA256SUMS.txt` covers the wheel, source distribution and source
+ZIP. Check the digest of a downloaded artifact before installing it.

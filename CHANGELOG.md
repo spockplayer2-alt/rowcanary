@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-11-02
 
 - Generate 24 deterministic, realistic edge-case CSV controls.
 - Compare round-tripped CSV or JSON by stable probe IDs, regardless of row order.
