@@ -1,0 +1,12 @@
+include README.md LICENSE CHANGELOG.md CONTRIBUTING.md SECURITY.md
+include .editorconfig .gitignore .gitattributes
+recursive-include .github/workflows *.yml
+recursive-include assets *.svg *.png *.md *.txt
+recursive-include docs *.md
+recursive-include examples *.csv *.json
+recursive-include tests *.py
+recursive-include tools *.py *.txt
+global-exclude *.py[cod] .DS_Store
+prune .trail
+prune .local
+prune .venv

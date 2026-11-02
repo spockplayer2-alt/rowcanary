@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rowcanary"
+version = "0.1.0"
+description = "Detect silent data corruption in CSV import/export workflows with control samples"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "RowCanary contributors"}]
+keywords = ["csv", "import", "export", "data-integrity", "testing", "cli"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.urls]
+Source = "https://github.com/spockplayer2-alt/rowcanary"
+Issues = "https://github.com/spockplayer2-alt/rowcanary/issues"
+Changelog = "https://github.com/spockplayer2-alt/rowcanary/blob/main/CHANGELOG.md"
+
+[project.scripts]
+rowcanary = "rowcanary.cli:main"
+
+[project.optional-dependencies]
+dev = ["build>=1.2", "ruff>=0.11", "twine>=6"]
+
+[tool.setuptools]
+packages = ["rowcanary"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
