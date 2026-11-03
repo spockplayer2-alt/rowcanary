@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.0] - 2026-11-03
+
+- Publish the frozen, backward-compatible CLI, five-format comparison engine,
+  diagnostics/reports, local browser interface and Python/configuration API.
+- Complete the sequential roadmap, final regression and packaging review;
+  retain bounded inputs, exact values/types and documented application limits.
+- Provide verified wheel, sdist, source ZIP and SHA-256 checksums on GitHub.
+  No PyPI publication is included.
+
 ## [0.9.0] - 2026-11-03
 
 - Freeze the 1.0 feature/API surface after focused independent security and

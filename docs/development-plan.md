@@ -22,7 +22,7 @@ publication is authorized. No customer data or credentials enter test fixtures.
   verification and accessibility checks.
 - [x] 0.9.0: freeze features, regression/security/dependency/package review,
   full hosted matrix, known limitations and release automation proof.
-- [ ] 1.0.0: final review, green CI, verified public artifacts and installation.
+- [x] 1.0.0: final review, green CI, verified public artifacts and installation.
 
 For each feature: write and run failing behavioral tests, implement the narrow
 change, run the suite and static checks, inspect distributions, review the diff,
