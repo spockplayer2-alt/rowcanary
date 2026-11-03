@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.0] - 2026-11-03
+
+- Freeze the 1.0 feature/API surface after focused independent security and
+  compatibility review of the new configuration, CLI and browser changes.
+- Update security boundaries for all formats, local HTTP and configuration.
+- Verify the installed public API and configuration schema outside the checkout
+  in hosted packaging CI, in addition to existing local wheel/sdist gates.
+- Retain known application limitations and the unchanged runtime dependencies.
+
 ## [0.8.0] - 2026-11-03
 
 - Add a complete first-run guide, spreadsheet guidance and troubleshooting.

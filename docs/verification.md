@@ -1,5 +1,14 @@
 # Release verification
 
+## v0.9.0 feature freeze — 2026-11-03
+
+Independent review of the v0.7.0/v0.8.0 API/configuration/CLI/UI changes found
+no confirmed important defects. Existing same-day dependency-audit evidence
+was reused after checking all three installed runtime versions were unchanged.
+Hosted packaging now checks installed public API/schema use outside the source
+checkout. Each milestone retains Twine, archive/secret checks and clean wheel
+and sdist CLI/API/HTTP installs. All 17 jobs passed for the v0.8.0 commit.
+
 ## v0.7.0 / v0.8.0 — 2026-11-03
 
 v0.7.0 passed 19 focused local tests and all 17 hosted jobs in run 41680640926.

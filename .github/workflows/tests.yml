@@ -57,6 +57,7 @@ jobs:
           /tmp/rowcanary-wheel/bin/python -m rowcanary demo
           /tmp/rowcanary-wheel/bin/rowcanary make probe.csv
           /tmp/rowcanary-wheel/bin/rowcanary check probe.csv
+          /tmp/rowcanary-wheel/bin/python -c "import json; from pathlib import Path; from importlib.resources import files; from rowcanary import Config, check_file, write_probes; c=Config(probe_set='extended'); write_probes(Path('api.json'), **c.make_options()); assert check_file(Path('api.json'), **c.check_options()).ok; json.loads(files('rowcanary').joinpath('config.schema.json').read_bytes())"
 
   assets:
     runs-on: ubuntu-latest

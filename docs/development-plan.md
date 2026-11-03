@@ -20,7 +20,7 @@ publication is authorized. No customer data or credentials enter test fixtures.
   GitHub Actions and batch examples, integration tests.
 - [x] 0.8.0: complete guides, CLI/UI polish, actual screenshots, distribution
   verification and accessibility checks.
-- [ ] 0.9.0: freeze features, regression/security/dependency/package review,
+- [x] 0.9.0: freeze features, regression/security/dependency/package review,
   full hosted matrix, known limitations and release automation proof.
 - [ ] 1.0.0: final review, green CI, verified public artifacts and installation.
 

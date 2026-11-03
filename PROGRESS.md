@@ -1,6 +1,6 @@
 # Development progress
 
-Target: v1.0.0. Current published version: **v0.7.0**.
+Target: v1.0.0. Current published version: **v0.8.0**.
 
 **Resumed on 2026-11-03 with v0.3.0.** Work proceeds sequentially through the
 existing roadmap; no PyPI publication is authorized.
@@ -250,3 +250,17 @@ No milestone after v0.6.0 has been implemented or released. Resume at v0.7.0.
   reduced motion and mobile overflow passed. Screenshots inspected.
 - Local/browser evidence: `.local/ui-stale.cjs`, `.local/ui-final.cjs`,
   `output/playwright/v0.8-*`; published captures in `docs/screenshots/`.
+
+## Published v0.8.0 / v0.9.0 freeze
+
+- v0.8.0 commit `e2e6a0a`, hosted run **41682165242**, all 17 jobs passed;
+  published release and all four public artifact hashes verified.
+- Frozen features; focused independent review of v0.7.0/v0.8.0 code found no
+  confirmed important defects. Schema delimiter/path/NUL validation checked.
+- Runtime versions match the existing same-day audit: openpyxl 3.1.5,
+  defusedxml 0.7.1, et-xmlfile 2.0.0, no known vulnerabilities in that audit.
+  No new runtime dependency or redundant full audit was introduced.
+- Security guidance now covers five formats, local HTTP and bounded configuration.
+  Hosted packaging also exercises the installed public API/configuration schema.
+- Known Excel and other-application limitations remain as recorded; no claim
+  of universal spreadsheet compatibility or complete WCAG conformance.
