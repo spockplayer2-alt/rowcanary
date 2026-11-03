@@ -5,7 +5,7 @@
   </picture>
   <h1>RowCanary</h1>
   <p><strong>Detect silent data changes during import/export workflows.</strong></p>
-  <p>Local Python CLI · CSV and JSON · MIT · No runtime dependencies</p>
+  <p>Local Python CLI · CSV, TSV, JSON, JSONL and XLSX · MIT</p>
 </div>
 
 An import can succeed while changing the data. A spreadsheet might turn
@@ -52,7 +52,7 @@ python -m pip install .
 rowcanary --version
 ```
 
-The version output is `rowcanary 0.1.1`. Use a virtual environment if your Python
+The version output is `rowcanary 0.2.0`. Use a virtual environment if your Python
 installation requires one. If the console script is not on your `PATH`, use
 `python -m rowcanary` with the Python interpreter that installed the package.
 You can also run the module directly from the extracted source directory.
@@ -125,7 +125,8 @@ rowcanary check export.txt --format json --json
 ```
 
 `--format` chooses the input parser; `--json` chooses the output report.
-Without `--format`, the `.csv` or `.json` extension selects the parser.
+Without `--format`, a supported extension selects the parser; recognizable
+content is used for files with unknown extensions.
 `--delimiter` applies only to CSV.
 
 | Exit code | Meaning |
@@ -144,17 +145,18 @@ cannot represent. JSON escapes preserve the original Unicode values.
 
 | Operation | Format |
 | --- | --- |
-| Generate | UTF-8 CSV, comma by default, explicit alternative delimiter |
-| Check | UTF-8 CSV with a header; JSON array of objects |
-| Input BOM | One leading UTF-8 BOM is accepted for either format |
+| Generate / check | CSV, TSV, JSON array of objects, JSONL, XLSX |
+| Input encoding | UTF-8, UTF-16/32 with BOM; explicit `--encoding` for legacy text |
 | Report | Human-readable text or JSON |
 
 CSV quoting, embedded delimiters, escaped double quotes and embedded line
 breaks are parsed. Line breaks **inside values** are compared exactly, including
 the difference between LF, CR and CRLF. Record terminators may vary.
 
-XLSX, XML, JSONL, database connections and legacy character encodings are not
-supported. Convert exports to UTF-8 without replacing invalid bytes. See
+Use `--format` when the extension/content is ambiguous. XLSX uses one worksheet
+and stores generated strings as literal text; returned formulas are refused
+without evaluation. CSV/TSV can still be interpreted as formulas by external
+spreadsheet applications. See [formats and custom probes](docs/formats.md) and
 [the format and resource limits](docs/limitations.md).
 
 ## What it detects

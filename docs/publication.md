@@ -25,7 +25,8 @@ Topics: `python`, `cli`, `csv`, `json`, `data-integrity`, `data-quality`, `impor
 7. Confirm the repository, release notes and every attachment are publicly accessible.
 
 The social preview is [assets/social-preview.png](../assets/social-preview.png),
-1280 x 640 pixels. The project uses the MIT license and has no runtime dependencies.
+1280 x 640 pixels. The project uses the MIT license. XLSX uses openpyxl and
+defusedxml; text formats and the CLI use Python's standard library.
 
 **PyPI publication requires separate maintainer authorization.** Do not add an
 automatic PyPI upload step to the release workflow without that authorization.

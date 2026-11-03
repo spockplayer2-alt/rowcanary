@@ -17,7 +17,7 @@ def check(directory: Path) -> None:
         wheel = set(archive.namelist())
     with tarfile.open(sources[0]) as archive:
         source = {str(PurePosixPath(n).relative_to(n.split("/")[0])) for n in archive.getnames()}
-    modules = {f"rowcanary/{name}.py" for name in ("__init__", "__main__", "cli", "core")}
+    modules = {f"rowcanary/{path.name}" for path in Path("rowcanary").glob("*.py")}
     required = modules | {
         "README.md",
         "LICENSE",

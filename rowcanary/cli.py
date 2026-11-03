@@ -11,7 +11,9 @@ from pathlib import Path
 from typing import TextIO
 
 from . import __version__
-from .core import PROBES, ProbeFileError, check_file, write_probes, ID_COLUMN, VALUE_COLUMN
+from .core import ProbeFileError, check_file, write_probes, ID_COLUMN, VALUE_COLUMN
+from .formats import FORMATS
+from .probes import select_probes
 
 
 def _print_human(message: str, *, file: TextIO | None = None) -> None:
@@ -73,14 +75,28 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--version", action="version", version=f"rowcanary {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
-    maker = sub.add_parser("make", help="Generate a CSV file of edge-case test values")
+    maker = sub.add_parser("make", help="Generate a deterministic file of edge-case test values")
     maker.add_argument("output", type=Path, nargs="?", default=Path("rowcanary-probe.csv"))
     maker.add_argument(
         "--delimiter", default=",", help="CSV field separator: one character (default: comma)"
     )
-    checker = sub.add_parser("check", help="Audit a CSV or JSON export of the generated file")
+    checker = sub.add_parser("check", help="Audit an exported control file")
     checker.add_argument("input", type=Path)
-    checker.add_argument("--format", choices=("auto", "csv", "json"), default="auto")
+    for command in (maker, checker):
+        command.add_argument("--format", choices=("auto", *FORMATS), default="auto")
+        command.add_argument(
+            "--encoding",
+            default="utf-8-sig" if command is checker else "utf-8",
+            help="Text encoding (BOM encodings detected when checking)",
+        )
+        command.add_argument(
+            "--probe-set",
+            default="default",
+            help="default, extended, none, or comma-separated categories",
+        )
+        command.add_argument(
+            "--custom-values", type=Path, help="JSON array of custom {id, value} controls"
+        )
     checker.add_argument("--id-column", default=ID_COLUMN)
     checker.add_argument("--value-column", default=VALUE_COLUMN)
     checker.add_argument(
@@ -91,8 +107,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "make":
-            write_probes(args.output, delimiter=args.delimiter)
-            _print_human(f"Created {args.output} with {len(PROBES)} control rows.")
+            probes = select_probes(args.probe_set, args.custom_values)
+            write_probes(
+                args.output,
+                delimiter=args.delimiter,
+                file_format=args.format,
+                encoding=args.encoding,
+                probes=probes,
+            )
+            _print_human(f"Created {args.output} with {len(probes)} control rows.")
             _print_human("Import and export it, then run: rowcanary check <exported.csv>")
             if args.delimiter != ",":
                 _print_human("Use the same --delimiter when checking the exported CSV.")
@@ -108,6 +131,8 @@ def main(argv: list[str] | None = None) -> int:
                 id_column=args.id_column,
                 value_column=args.value_column,
                 delimiter=args.delimiter,
+                encoding=args.encoding,
+                probes=select_probes(args.probe_set, args.custom_values),
             )
             render_report(report, output_json=args.json)
             return 0 if report.ok else 1

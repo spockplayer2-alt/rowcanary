@@ -22,7 +22,8 @@ and settings as the data you want to protect, using isolated test records.
 - Text is compared exactly. Only the initial UTF-8 BOM is removed; spaces,
   Unicode normalization forms and in-cell CR/LF/CRLF are preserved. CSV record
   separators and JSON escape spelling are representation details, not values.
-- XLSX, XML, JSONL and non-UTF-8 encodings are unsupported. CSV follows Python's
+- See [formats](formats.md) for TSV, JSONL, XLSX and explicit legacy encodings.
+  XML and direct database connections are unsupported. CSV follows Python's
   `csv` parsing rules with strict quoted-field handling; it is not a general
   validator for every CSV dialect or external system's schema.
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rowcanary"
-version = "0.1.1"
+version = "0.2.0"
 description = "Detect silent data corruption in CSV import/export workflows with control samples"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
     "Topic :: Utilities",
 ]
-dependencies = []
+dependencies = ["openpyxl>=3.1.5,<4", "defusedxml>=0.7.1,<1"]
 
 [project.urls]
 Source = "https://github.com/spockplayer2-alt/rowcanary"

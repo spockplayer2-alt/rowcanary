@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0] - 2026-11-02
+
+- Generate and audit CSV, TSV, JSON, JSONL and single-sheet XLSX files.
+- Add explicit format/encoding options, conservative content detection and
+  UTF-16/32 BOM decoding without normalizing in-cell line breaks.
+- Add deterministic extended/category probe sets and validated custom scalar
+  controls, preserving the original default probe IDs and CLI commands.
+- Preserve JSON/XLSX scalar types; refuse lossy XLSX integer/text generation.
+- Store XLSX strings as literal text and reject returned formulas without
+  executing them. Bound ZIP expansion and validate malformed workbooks.
+- Write deterministic OpenXML/ZIP metadata and preserve embedded CR/LF/CRLF
+  across platforms without passing generated data through text-mode writers.
+
 ## [0.1.1] - 2026-11-02
 
 - Enforce the documented string-field safety bound in JSON, including nested

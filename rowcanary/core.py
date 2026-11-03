@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+from decimal import Decimal, InvalidOperation
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -19,7 +20,7 @@ MAX_FIELD_CHARS = 128 * 1024
 @dataclass(frozen=True)
 class Probe:
     ident: str
-    value: str
+    value: str | int | float | bool | None
     category: str
     reason: str
 
@@ -91,7 +92,7 @@ class ProbeFileError(ValueError):
     """The supplied file cannot be interpreted as an exported probe."""
 
 
-def _read_text(path: Path) -> str:
+def _read_bytes(path: Path) -> bytes:
     try:
         if not path.is_file():
             raise ProbeFileError(f"File does not exist: {path}")
@@ -103,11 +104,27 @@ def _read_text(path: Path) -> str:
             data = stream.read(MAX_BYTES + 1)
         if len(data) > MAX_BYTES:
             raise ProbeFileError(f"File exceeds {MAX_BYTES // (1024 * 1024)} MiB safety limit")
-        return data.decode("utf-8-sig")
-    except UnicodeError as exc:
-        raise ProbeFileError("Expected UTF-8 text (a UTF-8 BOM is supported)") from exc
+        return data
     except OSError as exc:
         raise ProbeFileError(f"Cannot read file: {exc}") from exc
+
+
+def _decode_text(data: bytes, encoding: str = "utf-8-sig") -> str:
+    if encoding == "utf-8-sig":
+        if data.startswith((b"\xff\xfe\x00\x00", b"\x00\x00\xfe\xff")):
+            encoding = "utf-32"
+        elif data.startswith((b"\xff\xfe", b"\xfe\xff")):
+            encoding = "utf-16"
+    try:
+        return data.decode(encoding)
+    except (UnicodeError, LookupError) as exc:
+        raise ProbeFileError(
+            "Expected UTF-8 text or a supported BOM; use --encoding for legacy text"
+        ) from exc
+
+
+def _read_text(path: Path, encoding: str = "utf-8-sig") -> str:
+    return _decode_text(_read_bytes(path), encoding)
 
 
 def _validate_delimiter(delimiter: str) -> None:
@@ -122,17 +139,28 @@ def _validate_delimiter(delimiter: str) -> None:
         )
 
 
-def write_probes(path: Path, *, delimiter: str = ",") -> None:
+def write_probes(
+    path: Path,
+    *,
+    delimiter: str = ",",
+    file_format: str = "auto",
+    probes=PROBES,
+    encoding: str = "utf-8",
+) -> None:
     """Create probes exclusively; never overwrite an existing file."""
-    _validate_delimiter(delimiter)
+    from .formats import detect_format, encode_probes
+    from .probes import validate_probes
+
     path = Path(path)
+    selected = validate_probes(probes)
+    data = encode_probes(selected, detect_format(path, file_format), delimiter, encoding)
+    if len(data) > MAX_BYTES:
+        raise ProbeFileError("Generated file exceeds the safety limit")
     # Some Windows runtimes follow dangling symlinks even in exclusive mode.
     if path.is_symlink():
         raise FileExistsError(f"File already exists: {path}")
-    with path.open("x", newline="", encoding="utf-8") as stream:
-        writer = csv.writer(stream, delimiter=delimiter, lineterminator="\r\n")
-        writer.writerow((ID_COLUMN, VALUE_COLUMN))
-        writer.writerows((p.ident, p.value) for p in PROBES)
+    with path.open("xb") as stream:
+        stream.write(data)
 
 
 def _load_csv(text: str, *, delimiter: str) -> tuple[list[dict[str, Any]], list[str]]:
@@ -230,28 +258,29 @@ def check_file(
     id_column: str = ID_COLUMN,
     value_column: str = VALUE_COLUMN,
     delimiter: str = ",",
+    probes=PROBES,
+    encoding: str = "utf-8-sig",
 ) -> Report:
+    from .formats import load_rows
+    from .probes import validate_probes
+
     if any(not isinstance(name, str) or not name for name in (id_column, value_column)):
         raise ProbeFileError("ID and value column names must be non-empty text")
     path = Path(path)
-    text = _read_text(path)
-    fmt = path.suffix.lower().lstrip(".") if file_format == "auto" else file_format
-    if fmt not in ("csv", "json"):
-        raise ProbeFileError("Unknown format; use a .csv or .json file or --format")
+    probes = validate_probes(probes)
     if id_column == value_column:
         raise ProbeFileError("ID and value columns must be different")
-    if fmt == "csv":
-        _validate_delimiter(delimiter)
-        rows, columns = _load_csv(text, delimiter=delimiter)
-    else:
-        rows = _load_json(text)
+    rows, columns, fmt = load_rows(path, file_format, delimiter, encoding)
+    if columns is None:
         columns = [name for name in (id_column, value_column) if any(name in row for row in rows)]
-    if (fmt == "csv" or rows) and (id_column not in columns or value_column not in columns):
+    if (fmt in ("csv", "tsv", "xlsx") or rows) and (
+        id_column not in columns or value_column not in columns
+    ):
         raise ProbeFileError(
             f"Missing required columns: {id_column!r} and/or {value_column!r}; "
             "use --id-column and --value-column if the exporter renamed them"
         )
-    expected = {probe.ident: probe for probe in PROBES}
+    expected = {probe.ident: probe for probe in probes}
     seen: set[str] = set()
     issues: list[Issue] = []
     passed = 0
@@ -281,14 +310,47 @@ def check_file(
             continue
         probe = expected[ident]
         actual_value = row[value_column]
-        if not isinstance(actual_value, str) or actual_value != probe.value:
+        expected_value = (
+            ("" if probe.value is None else str(probe.value))
+            if fmt in ("csv", "tsv")
+            else probe.value
+        )
+        if not _values_equal(actual_value, expected_value):
             actual_display = actual_value if isinstance(actual_value, str) else repr(actual_value)
             issues.append(
-                Issue("changed", ident, probe.reason, expected=probe.value, actual=actual_display)
+                Issue(
+                    "changed",
+                    ident,
+                    probe.reason,
+                    expected=_display_value(expected_value),
+                    actual=actual_display,
+                )
             )
         else:
             passed += 1
     for ident, probe in expected.items():
         if ident not in seen:
-            issues.append(Issue("missing", ident, "Probe row was dropped", expected=probe.value))
-    return Report(passed=passed, total=len(PROBES), issues=tuple(issues), input_path=str(path))
+            issues.append(
+                Issue(
+                    "missing", ident, "Probe row was dropped", expected=_display_value(probe.value)
+                )
+            )
+    return Report(passed=passed, total=len(probes), issues=tuple(issues), input_path=str(path))
+
+
+def _display_value(value) -> str:
+    return value if isinstance(value, str) else repr(value)
+
+
+def _values_equal(actual, expected) -> bool:
+    if isinstance(actual, _JsonNumber):
+        if type(expected) not in (int, float):
+            return False
+        integer_token = not any(c in actual.token.lower() for c in ".e")
+        if (type(expected) is int) != integer_token:
+            return False
+        try:
+            return Decimal(actual.token) == Decimal(str(expected))
+        except InvalidOperation:
+            return False
+    return type(actual) is type(expected) and actual == expected
