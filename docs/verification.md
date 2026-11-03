@@ -7,7 +7,15 @@ The reviewed v0.9.0 commit passed all 17 hosted OS/Python/package/asset jobs
 in run 41683474568 and all four public artifact hashes were verified. The
 v1.0.0 tag requires its own green commit matrix, distribution checks and clean
 wheel/sdist installations. Public release notes identify the exact verified SHA.
-PyPI publication is tracked by the `publish.yml` Trusted Publishing workflow.
+PyPI v1.0.0 was published on 2026-11-03 through the `pypi` environment using
+GitHub Actions Trusted Publishing, without an API token:
+[successful run 41702034555](https://github.com/spockplayer2-alt/rowcanary/actions/runs/41702034555),
+source commit `d0842f5`. The public wheel and sdist SHA-256 hashes match the
+workflow artifacts. A fresh environment outside the checkout installed the
+unpinned `rowcanary` package from https://pypi.org/simple with no cache, reported
+`rowcanary 1.0.0`, passed `pip check`, ran the demo successfully and preserved
+35/35 controls in an extended XLSX round trip.
+Package page: https://pypi.org/project/rowcanary/1.0.0/.
 No universal external-application compatibility is claimed.
 
 ## v0.9.0 feature freeze — 2026-11-03

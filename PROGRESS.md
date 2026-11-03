@@ -50,7 +50,12 @@ checkpoint is preserved in Git through v0.9.0. PyPI publication is now authorize
 - Release commit/tag: **d536ec2 / v1.0.0**. Implementation and learning committed
   and pushed. Only this final local PROGRESS.md checkpoint differs from the tag.
 - Browser and owned local server processes were stopped; no automatic work remains.
-- No unresolved GitHub release blocker. PyPI Trusted Publishing is in progress.
+- PyPI v1.0.0 published through Trusted Publishing on 2026-11-03, source
+  `d0842f5`, workflow run 41702034555: build and publish succeeded.
+  https://pypi.org/project/rowcanary/1.0.0/
+- Public wheel and sdist hashes match the hosted workflow artifacts. Fresh,
+  uncached PyPI installation outside the checkout returned `rowcanary 1.0.0`;
+  `pip check`, demo and extended XLSX round trip (35/35) passed.
 
 ## Remaining limits
 
@@ -66,8 +71,8 @@ checkpoint is preserved in Git through v0.9.0. PyPI publication is now authorize
 
 The v1.0.0 roadmap is complete. Resume only for a requested maintenance task.
 Preserve existing release tags and compatibility fixtures. PyPI publication is
-authorized for v1.0.0 via `publish.yml` and the `pypi` environment. Verify the
-hosted workflow, public registry files and a clean PyPI installation next.
+complete for v1.0.0 via `publish.yml` and the `pypi` environment. The hosted
+workflow, public registry files and a clean PyPI installation were verified.
 External application compatibility claims still require direct evidence.
 
 ## Local helpers and evidence
