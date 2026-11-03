@@ -29,6 +29,12 @@ does not invoke the comparator to generate expectations. Tests rebuild twice,
 check exact bytes/hashes and audit every fixture. Native outputs have a separate
 manifest and are never presented as synthetic rebuilds.
 
+Generated XLSX uses fixed ZIP metadata and uncompressed members. The earlier
+candidate's XML matched across runtimes, but DEFLATE bytes differed with host
+zlib versions. Stored members make fixture bytes portable at the cost of larger
+files; the normal generated-file limit still applies. Compressed external XLSX
+files remain supported by the reader.
+
 ## Native Excel observation — 2026-11-03
 
 Input: the same 35 extended synthetic controls as `clean.csv`; the native manifest

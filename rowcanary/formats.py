@@ -171,12 +171,13 @@ def encode_probes(probes, fmt: str, delimiter: str, encoding: str) -> bytes:
             ).replace(b"\r", b"&#13;"),
         }
         output = io.BytesIO()
-        with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as target:
+        # Stored members avoid host zlib-version differences in synthetic bytes.
+        with zipfile.ZipFile(output, "w", zipfile.ZIP_STORED) as target:
             for name, content in sorted(parts.items()):
                 info = zipfile.ZipInfo(name, (2000, 1, 1, 0, 0, 0))
                 info.create_system = 3
                 info.external_attr = 0o600 << 16
-                info.compress_type = zipfile.ZIP_DEFLATED
+                info.compress_type = zipfile.ZIP_STORED
                 target.writestr(info, content)
         return output.getvalue()
     if fmt in ("csv", "tsv"):

@@ -143,6 +143,20 @@ existing roadmap; no PyPI publication is authorized.
   failed, then passed with fixed platform metadata and checked-in rebuild checks.
 - All **120 tests passed**, plus Ruff, Twine, package/secret inspection and clean
   wheel/sdist CLI/HTTP/static installs. Independent review findings are fixed.
+- Hosted run **41675668895** then blocked publication: 14 test jobs failed only
+  the corpus rebuild check. Local Python 3.10 reproduction showed identical XML
+  but different DEFLATE sizes/bytes versus 3.14. Use stored ZIP members instead;
+  a compressor-independence regression first failed and now passes. Synthetic
+  corpus comparisons now match on installed Python 3.10–3.13; final suite has
+  121 tests. No v0.6.0 tag or release exists yet. Repeat all gates and hosted CI.
+- Final retry local gates passed: **121 tests** (13.564 seconds), Ruff/Twine,
+  package/secret checks and clean wheel/sdist CLI/HTTP/static installs.
+- Latest Trail false positives match prose about ZIP metadata to the warning
+  against timestamps alone. The fix retains explicit platform metadata AND uses
+  stored members, with compressor-independence and cross-version corpus proof;
+  the retry commit records this rationale. No ruled-out behavior was restored.
+- Ruling: choose larger, uncompressed generated XLSX files for cross-runtime
+  byte reproducibility; retain the 32 MiB output bound and compressed input support.
 - Trail check flags the documented explicit UTF-8 Excel import as conflicting
   with the browser-default encoding learning. This is a false positive: native
   fixture input has known UTF-8 bytes; browser checking remains BOM-aware. The

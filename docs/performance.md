@@ -21,6 +21,10 @@ memory guarantees, cold-start latency or application compatibility evidence.
 
 Windows / Python 3.14.0, 10,000 controls with 256-character CRLF values:
 
+These measurements were recorded for v0.5.0. Starting in v0.6.0, generated XLSX
+uses uncompressed ZIP members for cross-runtime reproducibility; its file size
+differs from the historical XLSX row below. Re-run the tool for current costs.
+
 | Format | Input bytes | Buffered parser peak | Selected parser peak | Full comparison peak | Comparison seconds |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | CSV | 2,708,922 | 21,660,058 | 184,842 | 1,594,154 | 0.188 |

@@ -101,6 +101,14 @@ class FormatTests(unittest.TestCase):
             write_probes(second)
         self.assertEqual(first.read_bytes(), second.read_bytes())
 
+    def test_generated_xlsx_does_not_depend_on_host_compression_runtime(self):
+        from unittest.mock import patch
+
+        path = self.root / "portable.xlsx"
+        with patch("zipfile.zlib.compressobj", side_effect=RuntimeError("Host DEFLATE differs")):
+            write_probes(path)
+        self.assertTrue(check_file(path).ok)
+
     def test_extended_probes_preserve_crlf_in_every_format(self):
         from rowcanary.probes import select_probes
 
