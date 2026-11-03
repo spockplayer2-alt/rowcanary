@@ -1,9 +1,7 @@
 # Your first real control check
 
-1. Download the wheel from the [latest release](https://github.com/spockplayer2-alt/rowcanary/releases/latest).
-   Requires Python 3.10–3.14. Install the downloaded file with
-   `python -m pip install ./rowcanary-VERSION-py3-none-any.whl`, replacing VERSION
-   with the release number. A package registry upload is not required.
+1. Install from [PyPI](https://pypi.org/project/rowcanary/) with
+   `python -m pip install rowcanary`. Requires Python 3.10 or newer.
 2. Start `python -m rowcanary serve --open`. Keep the terminal running.
    Choose **Generate controls**, a file format and a control set. Download the file.
 3. In a disposable workspace in your target application, import and export that

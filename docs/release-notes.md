@@ -9,8 +9,8 @@ versioned JSON/standalone HTML reports, batch checks, a local browser interface
 and a reusable Python/configuration API. Python 3.10–3.14 is supported. Runtime
 XLSX reading uses openpyxl and defusedxml; the CLI/UI adds no web framework.
 
-Install a downloaded wheel with `python -m pip install ./rowcanary-VERSION-py3-none-any.whl`.
-Replace VERSION with the attachment version. No PyPI publication is included.
+Install v1.0.0 from [PyPI](https://pypi.org/project/rowcanary/1.0.0/) with
+`python -m pip install rowcanary`.
 
 Read [quick start](quickstart.md), [verification](verification.md) and
 [limitations](limitations.md). Native Excel text and automatic CSV profiles

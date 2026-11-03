@@ -2,8 +2,9 @@
 
 The existing exact-value comparison engine and its 24 default controls remain
 compatible. Work proceeds in the requested release order; every tag requires a
-green hosted matrix and verified wheel, sdist, source ZIP and checksums. No PyPI
-publication is authorized. No customer data or credentials enter test fixtures.
+green hosted matrix and verified wheel, sdist, source ZIP and checksums. PyPI
+publication is authorized through `publish.yml` Trusted Publishing.
+No customer data or credentials enter test fixtures.
 
 - [x] 0.1.1: enforce JSON field bounds and column validation; regression tests.
 - [x] 0.2.0: CSV/TSV/JSON/JSONL/XLSX adapters, explicit encoding/format,

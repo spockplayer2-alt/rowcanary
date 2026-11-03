@@ -1,7 +1,8 @@
 # Development progress
 
-Target: **v1.0.0**. Current published version: **v0.9.0**.
-Final v1.0.0 candidate: metadata complete; final local gates/CI/publication pending.
+Target: **v1.0.0**. Current published version: **v1.0.0**.
+Completed 2026-11-03: v0.7.0, v0.8.0, v0.9.0 and v1.0.0 published sequentially.
+Final release: https://github.com/spockplayer2-alt/rowcanary/releases/tag/v1.0.0
 
 ## Published in this sprint
 
@@ -10,9 +11,10 @@ Final v1.0.0 candidate: metadata complete; final local gates/CI/publication pend
 | v0.7.0 | 5fda0a1 | 41680640926 | 17/17 passed; 4 public artifact hashes verified |
 | v0.8.0 | e2e6a0a | 41682165242 | 17/17 passed; 4 public artifact hashes verified |
 | v0.9.0 | 3704c9e | 41683474568 | 17/17 passed; 4 public artifact hashes verified |
+| v1.0.0 | d536ec2 | 41684567466 | 17/17 passed; 4 public artifact hashes verified |
 
 Earlier v0.1.0–v0.6.0 releases and history remain intact. The historical detailed
-checkpoint is preserved in Git through v0.9.0. No PyPI upload is authorized.
+checkpoint is preserved in Git through v0.9.0. PyPI publication is now authorized.
 
 ## Implemented and verified
 
@@ -34,6 +36,22 @@ checkpoint is preserved in Git through v0.9.0. No PyPI upload is authorized.
   defusedxml 0.7.1, et-xmlfile 2.0.0; no known vulnerabilities in that audit.
   No new runtime dependency; no redundant baseline audit.
 
+## Final verification
+
+- Complete local suite: **125 tests passed**, 16.780 seconds; no tests disabled,
+  skipped or removed. No repeated complete local suite during this sprint.
+- Ruff lint/format, Twine, package inspection, secret-pattern scan and clean
+  wheel/sdist CLI/API/configuration-schema/HTTP installations passed on final source.
+- Final commit/main CI **41684567466** and tag CI **41685181551** each passed
+  **all 17 jobs** (Python 3.10–3.14, Ubuntu/Windows/macOS, package and assets).
+- v1.0.0 is the public latest release, non-draft/non-prerelease. Wheel, sdist,
+  source ZIP and SHA256SUMS.txt were anonymously downloaded and verified against
+  local SHA-256 hashes. Each preceding sprint release passed the same public gates.
+- Release commit/tag: **d536ec2 / v1.0.0**. Implementation and learning committed
+  and pushed. Only this final local PROGRESS.md checkpoint differs from the tag.
+- Browser and owned local server processes were stopped; no automatic work remains.
+- No unresolved GitHub release blocker. PyPI Trusted Publishing is in progress.
+
 ## Remaining limits
 
 - Native Excel 16.0 build 20527 text and automatic CSV profiles preserve 33/35
@@ -46,9 +64,11 @@ checkpoint is preserved in Git through v0.9.0. No PyPI upload is authorized.
 
 ## Exact next action
 
-Finish final local gates, commit/push, require all 17 CI jobs, publish v1.0.0,
-verify all four public artifact hashes, then replace this pending checkpoint
-with the actual final results. Do not rewrite earlier tags or publish to PyPI.
+The v1.0.0 roadmap is complete. Resume only for a requested maintenance task.
+Preserve existing release tags and compatibility fixtures. PyPI publication is
+authorized for v1.0.0 via `publish.yml` and the `pypi` environment. Verify the
+hosted workflow, public registry files and a clean PyPI installation next.
+External application compatibility claims still require direct evidence.
 
 ## Local helpers and evidence
 

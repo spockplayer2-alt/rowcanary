@@ -43,23 +43,17 @@ Excel, Google Sheets, a CRM or another third-party application.
 
 ## Installation
 
-Requires **Python 3.10 or newer**. Clone the repository and install locally:
+Requires **Python 3.10 or newer**. Install from [PyPI](https://pypi.org/project/rowcanary/):
 
 ```bash
-git clone https://github.com/spockplayer2-alt/rowcanary.git
-cd rowcanary
-python -m pip install .
+pip install rowcanary
 rowcanary --version
 ```
 
-The version output is `rowcanary 0.6.0`. Use a virtual environment if your Python
+The version output is `rowcanary 1.0.0`. Use a virtual environment if your Python
 installation requires one. If the console script is not on your `PATH`, use
 `python -m rowcanary` with the Python interpreter that installed the package.
 You can also run the module directly from the extracted source directory.
-
-Alternatively, extract a downloaded source archive and run `python -m pip
-install .` in the directory containing `pyproject.toml`. RowCanary has not been
-published to PyPI. Do not assume that `pip install rowcanary` installs this project.
 
 ## Quick start
 
@@ -211,8 +205,8 @@ tokens retain their original spelling for diagnostics and remain numbers for
 comparison; they are never silently converted into strings. The CLI wraps
 these checks with text/JSON reports and exit codes.
 
-All processing stays local. There are no network calls, accounts, telemetry or
-third-party runtime packages.
+All processing stays local. There are no network calls, accounts or telemetry.
+XLSX support uses openpyxl and defusedxml.
 
 ## Development
 

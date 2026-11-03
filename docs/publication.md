@@ -28,5 +28,12 @@ The social preview is [assets/social-preview.png](../assets/social-preview.png),
 1280 x 640 pixels. The project uses the MIT license. XLSX uses openpyxl and
 defusedxml; text formats and the CLI use Python's standard library.
 
-**PyPI publication requires separate maintainer authorization.** Do not add an
-automatic PyPI upload step to the release workflow without that authorization.
+## PyPI Trusted Publishing
+
+The authorized `publish.yml` workflow builds and validates the wheel and sdist,
+then publishes through GitHub Actions OIDC in the `pypi` environment. No PyPI
+API token is used. Run it manually from the reviewed `main` commit; the build
+job validates the distributions and performs an installed-wheel smoke check
+before the separate publishing job receives `id-token: write` permission.
+Verify https://pypi.org/project/rowcanary/ and a clean `pip install rowcanary`
+after the workflow succeeds. Existing release tags remain unchanged.

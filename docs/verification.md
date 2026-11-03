@@ -7,7 +7,8 @@ The reviewed v0.9.0 commit passed all 17 hosted OS/Python/package/asset jobs
 in run 41683474568 and all four public artifact hashes were verified. The
 v1.0.0 tag requires its own green commit matrix, distribution checks and clean
 wheel/sdist installations. Public release notes identify the exact verified SHA.
-No PyPI publication or universal external-application compatibility is claimed.
+PyPI publication is tracked by the `publish.yml` Trusted Publishing workflow.
+No universal external-application compatibility is claimed.
 
 ## v0.9.0 feature freeze — 2026-11-03
 
