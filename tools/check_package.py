@@ -19,7 +19,7 @@ def check(directory: Path) -> None:
     with tarfile.open(sources[0]) as archive:
         source = {str(PurePosixPath(n).relative_to(n.split("/")[0])) for n in archive.getnames()}
     modules = {f"rowcanary/{path.name}" for path in Path("rowcanary").glob("*.py")}
-    modules.add("rowcanary/report.schema.json")
+    modules |= {"rowcanary/report.schema.json", "rowcanary/config.schema.json"}
     modules |= {
         f"rowcanary/static/{name}" for name in ("index.html", "app.css", "app.js", "icon.svg")
     }
@@ -55,7 +55,13 @@ def check(directory: Path) -> None:
         required.add(manifest_path.as_posix())
         for fixture in json.loads(manifest_path.read_bytes())["fixtures"]:
             required.add((manifest_path.parent / fixture["path"]).as_posix())
-    required.add("tools/excel-roundtrip.ps1")
+    required |= {
+        "tools/excel-roundtrip.ps1",
+        "examples/config.json",
+        "examples/integration.py",
+        "examples/github-actions.yml",
+        "docs/integrations.md",
+    }
     if not modules <= wheel or not required <= source:
         raise SystemExit(
             f"Missing package members: wheel={modules - wheel}; source={required - source}"

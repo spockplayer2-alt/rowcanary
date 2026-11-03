@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RowCanary configuration 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "file_format": {"enum": ["auto", "csv", "tsv", "json", "jsonl", "xlsx"]},
+    "encoding": {"type": ["string", "null"], "minLength": 1, "maxLength": 64},
+    "delimiter": {"type": "string", "minLength": 1, "maxLength": 1, "pattern": "^[^\\r\\n\\u0000\"]$"},
+    "id_column": {"type": "string", "minLength": 1, "maxLength": 255},
+    "value_column": {"type": "string", "minLength": 1, "maxLength": 255},
+    "probe_set": {"type": "string", "minLength": 1, "maxLength": 255},
+    "custom_values": {"type": ["string", "null"], "minLength": 1, "pattern": "^[^\\u0000]+$"},
+    "strict_order": {"type": "boolean"}
+  }
+}

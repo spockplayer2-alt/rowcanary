@@ -1,6 +1,6 @@
 # Development progress
 
-Target: v1.0.0. Current published version: **v0.5.0**.
+Target: v1.0.0. Current published version: **v0.6.0**.
 
 **Resumed on 2026-11-03 with v0.3.0.** Work proceeds sequentially through the
 existing roadmap; no PyPI publication is authorized.
@@ -123,7 +123,7 @@ existing roadmap; no PyPI publication is authorized.
 - Commit `17d9c97`; all 17 jobs passed in hosted run **41673055353**.
   Published v0.5.0 and verified all four public attachment hashes.
 
-## Active milestone: 0.6.0 — corpus and native Excel evidence implemented
+## Completed milestone: 0.6.0
 
 - 13 synthetic fixtures across all formats/BOM/dialect/type/change profiles;
   deterministic rebuilds, independent expected codes/IDs and SHA-256 manifests.
@@ -148,7 +148,8 @@ existing roadmap; no PyPI publication is authorized.
   but different DEFLATE sizes/bytes versus 3.14. Use stored ZIP members instead;
   a compressor-independence regression first failed and now passes. Synthetic
   corpus comparisons now match on installed Python 3.10–3.13; final suite has
-  121 tests. No v0.6.0 tag or release exists yet. Repeat all gates and hosted CI.
+  121 tests. The failed candidate was not tagged or published; final gates and
+  hosted CI were repeated successfully on the corrected source.
 - Final retry local gates passed: **121 tests** (13.564 seconds), Ruff/Twine,
   package/secret checks and clean wheel/sdist CLI/HTTP/static installs.
 - Latest Trail false positives match prose about ZIP metadata to the warning
@@ -161,15 +162,46 @@ existing roadmap; no PyPI publication is authorized.
   with the browser-default encoding learning. This is a false positive: native
   fixture input has known UTF-8 bytes; browser checking remains BOM-aware. The
   release commit records this distinction as required by Trail.
+- Final commit **`675cfdd`**; all **17 jobs passed** in hosted run
+  **41676886153**. Published [v0.6.0](https://github.com/spockplayer2-alt/rowcanary/releases/tag/v0.6.0)
+  and verified wheel, sdist, source ZIP and checksums publicly against local
+  hashes. Evidence: `.local/verification/publish-0.6.0.log`.
+
+## End-of-session checkpoint — 2026-11-03
+
+- Published independently today: **v0.3.0, v0.4.0, v0.5.0, v0.6.0**. Each has
+  its own green 17-job matrix and four publicly verified release attachments.
+- Final local suite: **121 passed** (13.564 seconds), plus lint/format, Twine,
+  archive/secret checks and clean wheel/sdist CLI/HTTP/static installations.
+- No unresolved test or release blocker. The first v0.6.0 CI failure is fixed;
+  no failed or pending check was used as a publication gate.
+- All implementation and learnings through v0.6.0 are committed and pushed.
+  This final post-publication `PROGRESS.md` checkpoint remains a local tracked
+  modification, as in the previous session; preserve it. No other source work
+  is unfinished or untracked. `.local/` and browser evidence are ignored helpers.
+- Test browser and local HTTP server were stopped; no Excel process remained.
+  No local development process or automatic continuation runs in the background.
+- Remaining roadmap: v0.7.0 public API/configuration/integration examples;
+  v0.8.0 guides/UI/accessibility/screenshots; v0.9.0 freeze/security/package
+  review; v1.0.0 final review/CI/public artifacts/install verification.
+- Limitations: native Excel profiles both failed controls as documented; other
+  Excel workflows, Google Sheets, LibreOffice and CRM remain unverified.
+  Generated XLSX is now larger because it uses stored ZIP members. No PyPI
+  publication occurred or is authorized.
 
 ## Exact next action
 
-1. Finish v0.6.0 full release gates; commit/push,
-   wait for all 17 jobs, publish/verify artifacts.
-2. Proceed with v0.7.0 stable public API, validated reusable JSON configuration,
-   GitHub Actions/batch examples and integration tests.
-   Use tests first; preserve exact line breaks, stable IDs and issue codes.
-3. Never publish to PyPI or rewrite existing release tags/history.
+1. Start **v0.7.0**. Read this checkpoint and `docs/development-plan.md`; reuse
+   existing checkout, releases, corpus, tests and helpers. Do not rebuild old
+   features or repeat the completed baseline audit/Excel investigation.
+2. `.local/plan-0.7.0.md` is a conceptual draft only: immutable configuration,
+   bounded JSON/schema validation, relative custom-value paths, explicit CLI
+   overrides and make/check API option helpers. No v0.7.0 source or tests exist
+   yet. Inspect the current CLI/API with Trail, write behavioral tests first,
+   and implement this milestone before touching v0.8.0.
+3. Preserve exact line breaks, stable IDs/issue codes and the native Excel CSVs.
+   Keep generated XLSX platform metadata and stored members deterministic.
+4. Never publish to PyPI or rewrite existing release tags/history.
 
 ## Local helpers and evidence
 
@@ -184,7 +216,7 @@ existing roadmap; no PyPI publication is authorized.
   Read it before reuse. It is local tooling, not committed product code.
 - Local release artifacts/logs: `.local/v0.1.1/`, `.local/v0.2.0/` and
   `.local/verification/`. Development changes are committed through v0.2.0;
-  v0.5.0 is committed/published; v0.6.0 compatibility work is uncommitted.
+  v0.6.0 is committed/published; only this final progress checkpoint is local.
 - Existing logo identity retained. Five SVGs render; six PNGs match masters.
 - Native Excel OpenText profiles are verified only as recorded in v0.6.0 above.
   Google Sheets, LibreOffice, CRM and other Excel workflows remain unverified.
@@ -192,5 +224,16 @@ existing roadmap; no PyPI publication is authorized.
   changing the writer. Do not replace bounded binary decoding with `read_text`.
 
 See [development plan](docs/development-plan.md) for the remaining milestones.
-No milestone after 0.5.0 has been released yet. v0.6.0 is implemented; do not
-claim publication until hosted checks and public download verification pass.
+No milestone after v0.6.0 has been implemented or released. Resume at v0.7.0.
+
+## Final sprint: v0.7.0 implementation
+
+- Public API, immutable configuration, bounded duplicate-safe JSON and explicit
+  CLI precedence implemented; exact relative CRLF/null/large-integer controls tested.
+- Configuration regressions first failed on absent public imports, then passed.
+- Focused local checks and existing 17-job hosted matrix gate this milestone.
+- Ruling: use focused local tests per milestone and one final complete suite,
+  as requested; reuse all distribution/install/security gates on each release.
+- Existing Excel round-trip defects remain observable differences, not normalized.
+- Local verification: 19 focused tests (configuration/CLI/documentation), lint/format,
+  Twine, archive/secret checks and clean wheel/sdist CLI/API/HTTP installs.

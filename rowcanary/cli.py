@@ -8,12 +8,13 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from dataclasses import fields, replace
 from typing import TextIO
 
 from . import __version__
 from .core import ProbeFileError, check_file, write_probes, ID_COLUMN, VALUE_COLUMN
+from .config import Config, load_config
 from .formats import FORMATS
-from .probes import select_probes
 from .reporting import export_report
 
 
@@ -81,39 +82,46 @@ def main(argv: list[str] | None = None) -> int:
     maker = sub.add_parser("make", help="Generate a deterministic file of edge-case test values")
     maker.add_argument("output", type=Path, nargs="?", default=Path("rowcanary-probe.csv"))
     maker.add_argument(
-        "--delimiter", default=",", help="CSV field separator: one character (default: comma)"
+        "--delimiter", default=argparse.SUPPRESS, help="CSV field separator (default: comma)"
     )
     checker = sub.add_parser("check", help="Audit an exported control file")
     checker.add_argument("input", type=Path)
     batch = sub.add_parser("batch", help="Audit several exports and retain every result")
     batch.add_argument("inputs", type=Path, nargs="+")
     for command in (maker, checker, batch):
-        command.add_argument("--format", choices=("auto", *FORMATS), default="auto")
+        command.add_argument("--config", type=Path, help="Reusable JSON configuration file")
+        command.add_argument(
+            "--format", dest="file_format", choices=("auto", *FORMATS), default=argparse.SUPPRESS
+        )
         command.add_argument(
             "--encoding",
-            default="utf-8" if command is maker else "utf-8-sig",
+            default=argparse.SUPPRESS,
             help="Text encoding (BOM encodings detected when checking)",
         )
         command.add_argument(
             "--probe-set",
-            default="default",
+            default=argparse.SUPPRESS,
             help="default, extended, none, or comma-separated categories",
         )
         command.add_argument(
-            "--custom-values", type=Path, help="JSON array of custom {id, value} controls"
+            "--custom-values",
+            type=Path,
+            default=argparse.SUPPRESS,
+            help="JSON array of custom {id, value} controls",
         )
     for command in (checker, batch):
-        command.add_argument("--id-column", default=ID_COLUMN)
-        command.add_argument("--value-column", default=VALUE_COLUMN)
+        command.add_argument("--id-column", default=argparse.SUPPRESS)
+        command.add_argument("--value-column", default=argparse.SUPPRESS)
         command.add_argument(
-            "--delimiter", default=",", help="CSV field separator (default: comma)"
+            "--delimiter", default=argparse.SUPPRESS, help="CSV field separator (default: comma)"
         )
         command.add_argument(
             "--json", action="store_true", help="Print a machine-readable JSON report"
         )
         command.add_argument(
             "--strict-order",
-            action="store_true",
+            action=argparse.BooleanOptionalAction,
+            default=argparse.SUPPRESS,
             help="Treat reordered rows as an integrity difference",
         )
         command.add_argument(
@@ -129,18 +137,19 @@ def main(argv: list[str] | None = None) -> int:
             from .web import serve
 
             return serve(port=args.port, open_browser=args.open)
+        if args.command in ("make", "check", "batch"):
+            config = load_config(args.config) if args.config else Config()
+            overrides = {
+                f.name: getattr(args, f.name) for f in fields(Config) if hasattr(args, f.name)
+            }
+            config = replace(config, **overrides)
         if args.command == "make":
-            probes = select_probes(args.probe_set, args.custom_values)
-            write_probes(
-                args.output,
-                delimiter=args.delimiter,
-                file_format=args.format,
-                encoding=args.encoding,
-                probes=probes,
-            )
+            options = config.make_options()
+            probes = options["probes"]
+            write_probes(args.output, **options)
             _print_human(f"Created {args.output} with {len(probes)} control rows.")
             _print_human("Import and export it, then run: rowcanary check <exported.csv>")
-            if args.delimiter != ",":
+            if config.delimiter != ",":
                 _print_human("Use the same --delimiter when checking the exported CSV.")
             _print_human(
                 "WARNING: Values beginning with '=', '+', or '-' may be evaluated "
@@ -148,15 +157,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         if args.command in ("check", "batch"):
-            options = dict(
-                file_format=args.format,
-                id_column=args.id_column,
-                value_column=args.value_column,
-                delimiter=args.delimiter,
-                encoding=args.encoding,
-                probes=select_probes(args.probe_set, args.custom_values),
-                strict_order=args.strict_order,
-            )
+            options = config.check_options()
             if args.command == "check":
                 report = check_file(args.input, **options)
                 if args.report:

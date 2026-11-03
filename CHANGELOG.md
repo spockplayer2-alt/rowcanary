@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0] - 2026-11-03
+
+- Stabilize public Python imports and add immutable, validated Config/load_config.
+- Support bounded UTF-8 JSON configuration for make/check/batch, relative custom
+  paths, explicit CLI precedence and --no-strict-order. Preserve prior defaults.
+- Package configuration schema 1.0 and Python, batch and pinned Actions examples.
+- Reject unknown/duplicate keys, invalid option types, encodings and oversized JSON.
+
 ## [0.6.0] - 2026-11-03
 
 - Add 13 deterministic synthetic compatibility fixtures with independent

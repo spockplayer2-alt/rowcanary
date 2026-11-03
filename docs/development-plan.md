@@ -16,7 +16,7 @@ publication is authorized. No customer data or credentials enter test fixtures.
   uploads and concurrent operations; large-file and malformed-input tests.
 - [x] 0.6.0: reproducible compatibility fixtures, matrix, live tests where
   applications are available, clearly labeled evidence.
-- [ ] 0.7.0: stable public API, validated reusable JSON configuration,
+- [x] 0.7.0: stable public API, validated reusable JSON configuration,
   GitHub Actions and batch examples, integration tests.
 - [ ] 0.8.0: complete guides, CLI/UI polish, actual screenshots, distribution
   verification and accessibility checks.

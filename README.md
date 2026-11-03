@@ -249,3 +249,5 @@ process in [SECURITY.md](SECURITY.md).
 RowCanary is distributed under the [MIT license](LICENSE). The social preview
 uses outlined Noto Sans glyphs; its [font license](assets/FONT-LICENSE.txt) is
 included.
+
+Reusable JSON options, Python API and batch/Actions examples: [integration guide](docs/integrations.md).

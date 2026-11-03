@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "file_format": "auto",
+  "probe_set": "extended",
+  "delimiter": ",",
+  "strict_order": false
+}
