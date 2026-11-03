@@ -14,7 +14,7 @@ publication is authorized. No customer data or credentials enter test fixtures.
   downloads, accessible themes and no external resources.
 - [x] 0.5.0: measure memory/time, stream line-based formats, bound archives,
   uploads and concurrent operations; large-file and malformed-input tests.
-- [ ] 0.6.0: reproducible compatibility fixtures, matrix, live tests where
+- [x] 0.6.0: reproducible compatibility fixtures, matrix, live tests where
   applications are available, clearly labeled evidence.
 - [ ] 0.7.0: stable public API, validated reusable JSON configuration,
   GitHub Actions and batch examples, integration tests.

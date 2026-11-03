@@ -1,0 +1,38 @@
+_rowcanary_id;_rowcanary_value
+plain;normal text
+zeroes;00012345
+large-int;12345678901234567890
+scientific;5E12
+decimal;19.9900
+small-decimal;0.000000123456789
+negative-zeroes;-0009
+phone;+5511999990000
+date-slash;03/04/2025
+date-iso;2025-08-09
+time;01:02:03
+bool;TRUE
+null;NULL
+empty;
+leading-space;  leading
+trailing-space;trailing  
+tab;alpha	beta
+newline;"line one
+line two"
+comma;alpha,beta
+quotes;"He said ""hello"""
+accent;São Paulo / crème brûlée
+nonlatin;日本語 العربية
+emoji;Cafe ☕ 🐤
+formula;=1+1
+timestamp;2025-08-09T01:02:03.123456+05:30
+decimal-comma;1.234,56
+precision;1.234567890123456789
+nfd;café
+nbsp;alpha beta
+crlf;"alpha
+beta"
+duplicate-plain;normal text
+false;false
+null-lower;null
+long-id;012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+special;"a;b|c\d/%?&<>"

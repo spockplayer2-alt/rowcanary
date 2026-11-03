@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import tarfile
 import zipfile
 from pathlib import Path, PurePosixPath
@@ -50,6 +51,11 @@ def check(directory: Path) -> None:
         "assets/FONT-LICENSE.txt",
     }
     required |= {f"assets/icon-{size}.png" for size in (32, 64, 128, 256)}
+    for manifest_path in Path("examples/compatibility").rglob("manifest.json"):
+        required.add(manifest_path.as_posix())
+        for fixture in json.loads(manifest_path.read_bytes())["fixtures"]:
+            required.add((manifest_path.parent / fixture["path"]).as_posix())
+    required.add("tools/excel-roundtrip.ps1")
     if not modules <= wheel or not required <= source:
         raise SystemExit(
             f"Missing package members: wheel={modules - wheel}; source={required - source}"

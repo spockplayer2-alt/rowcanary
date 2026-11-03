@@ -92,6 +92,15 @@ class FormatTests(unittest.TestCase):
         write_probes(second)
         self.assertEqual(first.read_bytes(), second.read_bytes())
 
+    def test_xlsx_zip_platform_metadata_is_reproducible_across_operating_systems(self):
+        from unittest.mock import patch
+
+        first, second = self.root / "windows.xlsx", self.root / "linux.xlsx"
+        write_probes(first)
+        with patch("zipfile.sys.platform", "linux"):
+            write_probes(second)
+        self.assertEqual(first.read_bytes(), second.read_bytes())
+
     def test_extended_probes_preserve_crlf_in_every_format(self):
         from rowcanary.probes import select_probes
 

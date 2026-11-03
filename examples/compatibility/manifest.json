@@ -1,0 +1,182 @@
+{
+  "fixtures": [
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "csv",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "clean.csv",
+      "sha256": "e8e95e2323a43bbd99d316b65443becc87ce5a6945900581bc046ea03448cf82"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "tsv",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "clean.tsv",
+      "sha256": "64a3891d6eb14c93fb858c56f7f386a519f0eb0a6a0c366c17a3631fa737876c"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "json",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "clean.json",
+      "sha256": "199dc3b507e0d67b50768c85f99947cc3539a3312f6aca4b46fbcc0dc64f46ca"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "jsonl",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "clean.jsonl",
+      "sha256": "02594da337061c84f869ee35b91b47d3423488750a7505b8c2f812c4a254d2c5"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "xlsx",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "clean.xlsx",
+      "sha256": "abdb533f0845b1ed1d65795120b055b3ad926a9d996c2242f2271a75197ce22c"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "csv",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "utf8-bom.csv",
+      "sha256": "04302c4e25d697290b024f01a6bc79e7e9325029cfa70e11d04bf33a7e6301fe"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "csv",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "utf16.csv",
+      "sha256": "a8b0a4e464470ac6f1c3a73a7eb83d73f492b01ad435aca76b03c6bddcbbcae2"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "tsv",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "utf16.tsv",
+      "sha256": "b790bfa1d21290ea28d4855e1edb991ed5d59912f763c9182a57d56644b41a82"
+    },
+    {
+      "delimiter": ";",
+      "encoding": "utf-8-sig",
+      "format": "csv",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "semicolon.csv",
+      "sha256": "08377a160da93fb4e3c0c887f36c9db4a4e09b61a6f6a3f5fe7a6d4121d29831"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "json",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "utf32.json",
+      "sha256": "03e74ba0cc8e4c0f9ecb13f32dab13ceb16c5d8bff8ed8cadf34ab4104d908a5"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "jsonl",
+      "issues": [],
+      "observations": [],
+      "ok": true,
+      "path": "utf16.jsonl",
+      "sha256": "2af5728042e7eca070995a6614057ccf2c603ae69abe2d7f59a641b3fc407335"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "csv",
+      "issues": [
+        [
+          "changed",
+          "crlf"
+        ],
+        [
+          "changed",
+          "nfd"
+        ],
+        [
+          "changed",
+          "zeroes"
+        ],
+        [
+          "duplicate",
+          "plain"
+        ],
+        [
+          "missing",
+          "large-int"
+        ],
+        [
+          "unexpected",
+          "extra"
+        ]
+      ],
+      "observations": [
+        "reordered"
+      ],
+      "ok": false,
+      "path": "synthetic-changes.csv",
+      "sha256": "31c770ffd33ef050b2f550dc0252c4cd0541c9dd5caf2e2e632b99fb73189e7a"
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "format": "json",
+      "issues": [
+        [
+          "changed",
+          "bool"
+        ],
+        [
+          "changed",
+          "empty"
+        ],
+        [
+          "changed",
+          "large-int"
+        ],
+        [
+          "changed",
+          "zeroes"
+        ]
+      ],
+      "observations": [],
+      "ok": false,
+      "path": "synthetic-types.json",
+      "sha256": "4b6fb235261fc3df7721eb65edc5d6e746081328992037915480820c6b8e2697"
+    }
+  ],
+  "probe_set": "extended",
+  "provenance": "synthetic",
+  "schema_version": "1.0",
+  "scope": "Deterministic parser fixtures; no native spreadsheet or CRM compatibility claim"
+}

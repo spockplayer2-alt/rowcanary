@@ -1,0 +1,122 @@
+{
+  "application": "Microsoft Excel",
+  "architecture": "32-bit",
+  "build": "20527",
+  "date": "2026-11-03",
+  "export": "SaveAs xlCSVUTF8, regional semicolon separator",
+  "fixtures": [
+    {
+      "delimiter": ";",
+      "issues": [
+        [
+          "changed",
+          "crlf"
+        ],
+        [
+          "changed",
+          "newline"
+        ],
+        [
+          "unexpected",
+          "beta\""
+        ],
+        [
+          "unexpected",
+          "line two\""
+        ]
+      ],
+      "passed": 33,
+      "path": "text.csv",
+      "profile": "text",
+      "sha256": "a4504300ac7147e663197c96f1ef81c95b083ef8ede34fdaaff7af0429a9f9fb"
+    },
+    {
+      "delimiter": ";",
+      "issues": [
+        [
+          "changed",
+          "crlf"
+        ],
+        [
+          "changed",
+          "date-iso"
+        ],
+        [
+          "changed",
+          "date-slash"
+        ],
+        [
+          "changed",
+          "decimal"
+        ],
+        [
+          "changed",
+          "formula"
+        ],
+        [
+          "changed",
+          "large-int"
+        ],
+        [
+          "changed",
+          "long-id"
+        ],
+        [
+          "changed",
+          "negative-zeroes"
+        ],
+        [
+          "changed",
+          "newline"
+        ],
+        [
+          "changed",
+          "phone"
+        ],
+        [
+          "changed",
+          "precision"
+        ],
+        [
+          "changed",
+          "scientific"
+        ],
+        [
+          "changed",
+          "time"
+        ],
+        [
+          "changed",
+          "zeroes"
+        ],
+        [
+          "missing",
+          "false"
+        ],
+        [
+          "unexpected",
+          "FALSE"
+        ],
+        [
+          "unexpected",
+          "beta\""
+        ],
+        [
+          "unexpected",
+          "line two\""
+        ]
+      ],
+      "passed": 20,
+      "path": "automatic.csv",
+      "profile": "automatic",
+      "sha256": "406f2f6755538c5043fe484332b186129a02522c6bbab15a90d79d762b775209"
+    }
+  ],
+  "import": "OpenText of byte-identical .txt copy; UTF-8, comma, double-quote qualifier; text columns or automatic inference",
+  "input": "../clean.csv",
+  "input_sha256": "e8e95e2323a43bbd99d316b65443becc87ce5a6945900581bc046ea03448cf82",
+  "provenance": "native-application-observation",
+  "schema_version": "1.0",
+  "scope": "This installation and these automation settings only. Neither profile passed all controls. No GUI, Power Query, Google Sheets or LibreOffice certification.",
+  "version": "16.0"
+}

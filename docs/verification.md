@@ -1,5 +1,15 @@
 # Release verification
 
+## v0.6.0 — 2026-11-03
+
+Thirteen synthetic fixtures and two native Excel CSV outputs carry SHA-256
+manifests and recorded issue IDs/codes. Tests compare regenerated synthetic
+bytes to the checked-in corpus. Review reproduced OS-dependent ZIP platform
+metadata and verified the fix before release. Native Excel observations are
+33/35 and 20/35, both failing profiles, independently confirmed from raw CSVs.
+See [compatibility evidence](compatibility.md) for the exact build, import/export
+parameters, scope, provenance and untested applications.
+
 ## v0.5.0 — 2026-11-03
 
 All 115 tests passed locally. Streaming/resource tests cover parser allocations,

@@ -1,3 +1,6 @@
 * text=auto eol=lf
 *.csv -text -whitespace
+*.tsv -text -whitespace
+*.jsonl -text -whitespace
+*.xlsx -text
 *.png -text

@@ -52,7 +52,7 @@ python -m pip install .
 rowcanary --version
 ```
 
-The version output is `rowcanary 0.5.0`. Use a virtual environment if your Python
+The version output is `rowcanary 0.6.0`. Use a virtual environment if your Python
 installation requires one. If the console script is not on your `PATH`, use
 `python -m rowcanary` with the Python interpreter that installed the package.
 You can also run the module directly from the extracted source directory.
@@ -158,6 +158,9 @@ cannot represent. JSON escapes preserve the original Unicode values.
 See [reports and batch checks](docs/reporting.md) for diagnostic fields, the
 packaged JSON Schema, `--strict-order`, exclusive `--report` exports and batch
 exit-code precedence.
+
+The [compatibility matrix](docs/compatibility.md) separates deterministic parser
+fixtures from actual Excel observations and unverified application workflows.
 
 CSV quoting, embedded delimiters, escaped double quotes and embedded line
 breaks are parsed. Line breaks **inside values** are compared exactly, including

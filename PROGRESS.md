@@ -1,6 +1,6 @@
 # Development progress
 
-Target: v1.0.0. Current published version: **v0.4.0**.
+Target: v1.0.0. Current published version: **v0.5.0**.
 
 **Resumed on 2026-11-03 with v0.3.0.** Work proceeds sequentially through the
 existing roadmap; no PyPI publication is authorized.
@@ -100,7 +100,7 @@ existing roadmap; no PyPI publication is authorized.
 - Commit `ba8be20`; all 17 jobs passed in hosted run **41669984337**.
   Published v0.4.0 and verified all four public attachment hashes.
 
-## Active milestone: 0.5.0 — local gates passed; hosted checks/publication pending
+## Completed milestone: 0.5.0
 
 - Stream CSV/TSV/JSONL with bounded readers and exact newline decoding. Compare
   once; retain bounded buffered JSON arrays/XLSX. Close streams on every exit.
@@ -120,12 +120,40 @@ existing roadmap; no PyPI publication is authorized.
   clean wheel/sdist CLI and HTTP/static installs passed on final source.
 - Ruling: reject oversized diagnostics as an operational error instead of
   presenting a partial pass. No schema or legacy issue-code change.
+- Commit `17d9c97`; all 17 jobs passed in hosted run **41673055353**.
+  Published v0.5.0 and verified all four public attachment hashes.
+
+## Active milestone: 0.6.0 — corpus and native Excel evidence implemented
+
+- 13 synthetic fixtures across all formats/BOM/dialect/type/change profiles;
+  deterministic rebuilds, independent expected codes/IDs and SHA-256 manifests.
+- Actual Microsoft Excel 16.0 build 20527, 32-bit: dedicated automation instance,
+  35 synthetic extended controls, macros disabled, no existing workbook touched.
+  OpenText of a byte-identical .txt copy with explicit UTF-8/comma, then CSVUTF8
+  export with actual regional semicolon separator. Text profile: 33/35, 4 issues;
+  automatic inference: 20/35, 18 issues. Both FAIL, retained without normalization.
+- Native raw CSVs/manifest are in `examples/compatibility/excel/`; reproducible
+  script and exact limitations are in `docs/compatibility.md`. No Excel process
+  remained after the run. Google Sheets, LibreOffice and CRM remain unverified.
+- Initial direct .csv OpenText did not produce required headers. The script now
+  checks headers and stages .txt to select explicit text import; failed attempt
+  stays only under `.local/verification/excel-0.6.0/`.
+- Independent review confirmed actual outcomes using csv independently of the
+  comparator. Found OS-dependent ZIP create_system metadata; regression first
+  failed, then passed with fixed platform metadata and checked-in rebuild checks.
+- All **120 tests passed**, plus Ruff, Twine, package/secret inspection and clean
+  wheel/sdist CLI/HTTP/static installs. Independent review findings are fixed.
+- Trail check flags the documented explicit UTF-8 Excel import as conflicting
+  with the browser-default encoding learning. This is a false positive: native
+  fixture input has known UTF-8 bytes; browser checking remains BOM-aware. The
+  release commit records this distinction as required by Trail.
 
 ## Exact next action
 
-1. Finish v0.5.0 release gates and full report-download verification; commit/push,
+1. Finish v0.6.0 full release gates; commit/push,
    wait for all 17 jobs, publish/verify artifacts.
-2. Proceed with v0.6.0 compatibility fixtures/matrix and available live tests.
+2. Proceed with v0.7.0 stable public API, validated reusable JSON configuration,
+   GitHub Actions/batch examples and integration tests.
    Use tests first; preserve exact line breaks, stable IDs and issue codes.
 3. Never publish to PyPI or rewrite existing release tags/history.
 
@@ -142,13 +170,13 @@ existing roadmap; no PyPI publication is authorized.
   Read it before reuse. It is local tooling, not committed product code.
 - Local release artifacts/logs: `.local/v0.1.1/`, `.local/v0.2.0/` and
   `.local/verification/`. Development changes are committed through v0.2.0;
-  v0.4.0 is committed/published; v0.5.0 resource work is currently uncommitted.
+  v0.5.0 is committed/published; v0.6.0 compatibility work is uncommitted.
 - Existing logo identity retained. Five SVGs render; six PNGs match masters.
-- Real Excel, Google Sheets, LibreOffice and CRM round trips remain unverified;
-  the format tests exercise parsers/generated files, not those applications.
+- Native Excel OpenText profiles are verified only as recorded in v0.6.0 above.
+  Google Sheets, LibreOffice, CRM and other Excel workflows remain unverified.
 - Read the committed Trail learning about the Windows XLSX newline issue before
   changing the writer. Do not replace bounded binary decoding with `read_text`.
 
 See [development plan](docs/development-plan.md) for the remaining milestones.
-No milestone after 0.4.0 has been released yet. v0.5.0 is implemented; do not
+No milestone after 0.5.0 has been released yet. v0.6.0 is implemented; do not
 claim publication until hosted checks and public download verification pass.

@@ -1,0 +1,39 @@
+_rowcanary_id,_rowcanary_value
+special,a;b|c\d/%?&<>
+long-id,012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+null-lower,null
+false,false
+duplicate-plain,normal text
+crlf,"alpha
+beta"
+nbsp,alpha beta
+nfd,café
+precision,1.234567890123456789
+decimal-comma,"1.234,56"
+timestamp,2025-08-09T01:02:03.123456+05:30
+formula,=1+1
+emoji,Cafe ☕ 🐤
+nonlatin,日本語 العربية
+accent,São Paulo / crème brûlée
+quotes,"He said ""hello"""
+comma,"alpha,beta"
+newline,"line one
+line two"
+tab,alpha	beta
+trailing-space,trailing  
+leading-space,  leading
+empty,
+null,NULL
+bool,TRUE
+time,01:02:03
+date-iso,2025-08-09
+date-slash,03/04/2025
+phone,+5511999990000
+negative-zeroes,-0009
+small-decimal,0.000000123456789
+decimal,19.9900
+scientific,5E12
+zeroes,12345
+plain,normal text
+plain,normal text
+extra,synthetic

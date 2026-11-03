@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0] - 2026-11-03
+
+- Add 13 deterministic synthetic compatibility fixtures with independent
+  expected issue IDs/codes, explicit provenance and SHA-256 manifests.
+- Cover five formats, UTF BOM profiles, semicolon CSV, changed/reordered rows
+  and native JSON scalar coercions; verify byte-identical corpus rebuilds.
+- Record native Microsoft Excel 16.0 build 20527 (32-bit) OpenText/CSVUTF8
+  observations: text-column import preserved 33/35 controls, automatic inference
+  20/35. Retain raw CSV outputs and exact settings; neither profile fully passed.
+- Add an isolated, macro-disabled Excel automation script and an evidence matrix
+  that separates parser fixtures, native observations and untested applications.
+
 ## [0.5.0] - 2026-11-03
 
 - Stream CSV, TSV and JSONL through bounded, context-managed readers, preserving

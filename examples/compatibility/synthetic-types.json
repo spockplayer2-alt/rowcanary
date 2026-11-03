@@ -1,0 +1,142 @@
+[
+  {
+    "_rowcanary_id": "plain",
+    "_rowcanary_value": "normal text"
+  },
+  {
+    "_rowcanary_id": "zeroes",
+    "_rowcanary_value": 12345
+  },
+  {
+    "_rowcanary_id": "large-int",
+    "_rowcanary_value": 12345678901234567000
+  },
+  {
+    "_rowcanary_id": "scientific",
+    "_rowcanary_value": "5E12"
+  },
+  {
+    "_rowcanary_id": "decimal",
+    "_rowcanary_value": "19.9900"
+  },
+  {
+    "_rowcanary_id": "small-decimal",
+    "_rowcanary_value": "0.000000123456789"
+  },
+  {
+    "_rowcanary_id": "negative-zeroes",
+    "_rowcanary_value": "-0009"
+  },
+  {
+    "_rowcanary_id": "phone",
+    "_rowcanary_value": "+5511999990000"
+  },
+  {
+    "_rowcanary_id": "date-slash",
+    "_rowcanary_value": "03/04/2025"
+  },
+  {
+    "_rowcanary_id": "date-iso",
+    "_rowcanary_value": "2025-08-09"
+  },
+  {
+    "_rowcanary_id": "time",
+    "_rowcanary_value": "01:02:03"
+  },
+  {
+    "_rowcanary_id": "bool",
+    "_rowcanary_value": true
+  },
+  {
+    "_rowcanary_id": "null",
+    "_rowcanary_value": "NULL"
+  },
+  {
+    "_rowcanary_id": "empty",
+    "_rowcanary_value": null
+  },
+  {
+    "_rowcanary_id": "leading-space",
+    "_rowcanary_value": "  leading"
+  },
+  {
+    "_rowcanary_id": "trailing-space",
+    "_rowcanary_value": "trailing  "
+  },
+  {
+    "_rowcanary_id": "tab",
+    "_rowcanary_value": "alpha\tbeta"
+  },
+  {
+    "_rowcanary_id": "newline",
+    "_rowcanary_value": "line one\nline two"
+  },
+  {
+    "_rowcanary_id": "comma",
+    "_rowcanary_value": "alpha,beta"
+  },
+  {
+    "_rowcanary_id": "quotes",
+    "_rowcanary_value": "He said \"hello\""
+  },
+  {
+    "_rowcanary_id": "accent",
+    "_rowcanary_value": "São Paulo / crème brûlée"
+  },
+  {
+    "_rowcanary_id": "nonlatin",
+    "_rowcanary_value": "日本語 العربية"
+  },
+  {
+    "_rowcanary_id": "emoji",
+    "_rowcanary_value": "Cafe ☕ 🐤"
+  },
+  {
+    "_rowcanary_id": "formula",
+    "_rowcanary_value": "=1+1"
+  },
+  {
+    "_rowcanary_id": "timestamp",
+    "_rowcanary_value": "2025-08-09T01:02:03.123456+05:30"
+  },
+  {
+    "_rowcanary_id": "decimal-comma",
+    "_rowcanary_value": "1.234,56"
+  },
+  {
+    "_rowcanary_id": "precision",
+    "_rowcanary_value": "1.234567890123456789"
+  },
+  {
+    "_rowcanary_id": "nfd",
+    "_rowcanary_value": "café"
+  },
+  {
+    "_rowcanary_id": "nbsp",
+    "_rowcanary_value": "alpha beta"
+  },
+  {
+    "_rowcanary_id": "crlf",
+    "_rowcanary_value": "alpha\r\nbeta"
+  },
+  {
+    "_rowcanary_id": "duplicate-plain",
+    "_rowcanary_value": "normal text"
+  },
+  {
+    "_rowcanary_id": "false",
+    "_rowcanary_value": "false"
+  },
+  {
+    "_rowcanary_id": "null-lower",
+    "_rowcanary_value": "null"
+  },
+  {
+    "_rowcanary_id": "long-id",
+    "_rowcanary_value": "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+  },
+  {
+    "_rowcanary_id": "special",
+    "_rowcanary_value": "a;b|c\\d/%?&<>"
+  }
+]
