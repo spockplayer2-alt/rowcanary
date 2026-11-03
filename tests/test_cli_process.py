@@ -9,6 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from rowcanary import __version__
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -44,8 +46,10 @@ class CliProcessTests(unittest.TestCase):
 
     def test_module_version_help_and_usage_exit_codes(self):
         version = self.run_cli("--version")
-        self.assertEqual((version.returncode, version.stdout.strip(), version.stderr),
-                         (0, "rowcanary 0.1.0", ""))
+        self.assertEqual(
+            (version.returncode, version.stdout.strip(), version.stderr),
+            (0, f"rowcanary {__version__}", ""),
+        )
         for command in ((), ("unknown",)):
             with self.subTest(command=command):
                 usage = self.run_cli(*command)
@@ -137,7 +141,9 @@ class CliProcessTests(unittest.TestCase):
             path = self.make_probe(directory)
             with path.open(encoding="utf-8", newline="") as stream:
                 rows = list(csv.DictReader(stream))
-            rows.append({"_rowcanary_id": "extra\x1b[31m\u202e\nforged", "_rowcanary_value": "text"})
+            rows.append(
+                {"_rowcanary_id": "extra\x1b[31m\u202e\nforged", "_rowcanary_value": "text"}
+            )
             self.save_rows(path, rows)
             result = self.run_cli("check", path)
             self.assertEqual(result.returncode, 1, result.stderr)
@@ -169,7 +175,9 @@ class CliProcessTests(unittest.TestCase):
                     self.assertEqual(result.returncode, 1, result.stderr)
                     self.assertEqual(result.stderr, "")
                     report = json.loads(result.stdout)
-                    self.assertIn("\u5371\u967a\U0001f4a5", [i.get("actual") for i in report["issues"]])
+                    self.assertIn(
+                        "\u5371\u967a\U0001f4a5", [i.get("actual") for i in report["issues"]]
+                    )
                     self.assertIn("\u8ffd\u52a0\U0001f4a5", [i["ident"] for i in report["issues"]])
 
     def test_delimiter_is_explicit_for_make_and_check(self):

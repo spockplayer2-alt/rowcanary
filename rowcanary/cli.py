@@ -18,8 +18,7 @@ def _print_human(message: str, *, file: TextIO | None = None) -> None:
     """Keep untrusted text on one line and represent unsupported characters."""
     stream = file if file is not None else sys.stdout
     display = "".join(
-        character if character.isprintable()
-        else character.encode("unicode_escape").decode("ascii")
+        character if character.isprintable() else character.encode("unicode_escape").decode("ascii")
         for character in message
     )
     encoding = getattr(stream, "encoding", None) or "utf-8"
@@ -76,13 +75,17 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     maker = sub.add_parser("make", help="Generate a CSV file of edge-case test values")
     maker.add_argument("output", type=Path, nargs="?", default=Path("rowcanary-probe.csv"))
-    maker.add_argument("--delimiter", default=",", help="CSV field separator: one character (default: comma)")
+    maker.add_argument(
+        "--delimiter", default=",", help="CSV field separator: one character (default: comma)"
+    )
     checker = sub.add_parser("check", help="Audit a CSV or JSON export of the generated file")
     checker.add_argument("input", type=Path)
     checker.add_argument("--format", choices=("auto", "csv", "json"), default="auto")
     checker.add_argument("--id-column", default=ID_COLUMN)
     checker.add_argument("--value-column", default=VALUE_COLUMN)
-    checker.add_argument("--delimiter", default=",", help="CSV field separator: one character (default: comma)")
+    checker.add_argument(
+        "--delimiter", default=",", help="CSV field separator: one character (default: comma)"
+    )
     checker.add_argument("--json", action="store_true", help="Print a machine-readable JSON report")
     sub.add_parser("demo", help="Run a self-contained example with intentionally broken values")
     args = parser.parse_args(argv)
@@ -99,9 +102,13 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         if args.command == "check":
-            report = check_file(args.input, file_format=args.format,
-                                id_column=args.id_column, value_column=args.value_column,
-                                delimiter=args.delimiter)
+            report = check_file(
+                args.input,
+                file_format=args.format,
+                id_column=args.id_column,
+                value_column=args.value_column,
+                delimiter=args.delimiter,
+            )
             render_report(report, output_json=args.json)
             return 0 if report.ok else 1
         return demo()

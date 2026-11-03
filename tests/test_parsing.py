@@ -9,7 +9,12 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from rowcanary.core import (
-    ID_COLUMN, PROBES, VALUE_COLUMN, ProbeFileError, check_file, write_probes,
+    ID_COLUMN,
+    PROBES,
+    VALUE_COLUMN,
+    ProbeFileError,
+    check_file,
+    write_probes,
 )
 
 
@@ -44,8 +49,10 @@ class ParsingTests(unittest.TestCase):
                 next(row for row in rows if row[ID_COLUMN] == "newline")[VALUE_COLUMN] = changed
                 report = check_file(self._csv(rows))
                 self.assertFalse(report.ok)
-                self.assertEqual([(i.code, i.ident, i.actual) for i in report.issues],
-                                 [("changed", "newline", changed)])
+                self.assertEqual(
+                    [(i.code, i.ident, i.actual) for i in report.issues],
+                    [("changed", "newline", changed)],
+                )
 
     def test_blank_csv_records_are_detected(self):
         with self.probe.open("ab") as stream:
@@ -117,8 +124,11 @@ class ParsingTests(unittest.TestCase):
     def test_json_duplicate_keys_are_rejected(self):
         output = self._json(self._rows())
         text = output.read_text(encoding="utf-8")
-        text = text.replace('"_rowcanary_value": "normal text"',
-                            '"_rowcanary_value": "changed", "_rowcanary_value": "normal text"', 1)
+        text = text.replace(
+            '"_rowcanary_value": "normal text"',
+            '"_rowcanary_value": "changed", "_rowcanary_value": "normal text"',
+            1,
+        )
         output.write_text(text, encoding="utf-8")
         with self.assertRaisesRegex(ProbeFileError, "duplicate"):
             check_file(output)
@@ -133,9 +143,13 @@ class ParsingTests(unittest.TestCase):
                     check_file(output)
 
     def test_numeric_json_tokens_keep_precision_but_never_pass_as_text(self):
-        for ident, token in (("large-int", "12345678901234567890"),
-                             ("decimal", "19.9900"), ("scientific", "5E12"),
-                             ("scientific", "1e9999"), ("large-int", "9" * 5000)):
+        for ident, token in (
+            ("large-int", "12345678901234567890"),
+            ("decimal", "19.9900"),
+            ("scientific", "5E12"),
+            ("scientific", "1e9999"),
+            ("large-int", "9" * 5000),
+        ):
             with self.subTest(ident=ident, token=token[:30]):
                 output = self._json(self._rows())
                 original = next(p.value for p in PROBES if p.ident == ident)
@@ -145,8 +159,10 @@ class ParsingTests(unittest.TestCase):
                     report = check_file(output)
                 except Exception as exc:
                     self.fail(f"Valid numeric JSON token crashed: {type(exc).__name__}")
-                self.assertEqual([(i.code, i.ident, i.actual) for i in report.issues],
-                                 [("changed", ident, token)])
+                self.assertEqual(
+                    [(i.code, i.ident, i.actual) for i in report.issues],
+                    [("changed", ident, token)],
+                )
 
     def test_json_id_types_are_never_coerced_to_text(self):
         for ident in (12, 1.5, True, None, [], {}):
@@ -176,7 +192,8 @@ class ParsingTests(unittest.TestCase):
     def test_json_duplicate_keys_in_extra_columns_are_rejected(self):
         output = self._json(self._rows())
         text = output.read_text(encoding="utf-8").replace(
-            '"normal text"', '"normal text", "extra": {"a": 1, "a": 2}', 1)
+            '"normal text"', '"normal text", "extra": {"a": 1, "a": 2}', 1
+        )
         output.write_text(text, encoding="utf-8")
         with self.assertRaisesRegex(ProbeFileError, "duplicate"):
             check_file(output)
@@ -207,8 +224,10 @@ class ParsingTests(unittest.TestCase):
             check_file(self._json([{"id": "plain", "value": "normal text"}]))
 
     def test_csv_duplicate_headers_and_bad_quoted_trailers_are_file_errors(self):
-        for text in (f"{ID_COLUMN},{ID_COLUMN}\r\nplain,normal text\r\n",
-                     f'{ID_COLUMN},{VALUE_COLUMN}\r\nplain,"normal text"suffix\r\n'):
+        for text in (
+            f"{ID_COLUMN},{ID_COLUMN}\r\nplain,normal text\r\n",
+            f'{ID_COLUMN},{VALUE_COLUMN}\r\nplain,"normal text"suffix\r\n',
+        ):
             with self.subTest(text=text):
                 output = self.root / "malformed.csv"
                 output.write_bytes(text.encode("utf-8"))
@@ -225,8 +244,9 @@ class ParsingTests(unittest.TestCase):
         output = self._csv(self._rows())
         output.write_bytes(output.read_bytes().replace(b"empty,\r\n", b"empty\r\n", 1))
         report = check_file(output)
-        self.assertEqual([(i.code, i.ident, i.actual) for i in report.issues],
-                         [("changed", "empty", "None")])
+        self.assertEqual(
+            [(i.code, i.ident, i.actual) for i in report.issues], [("changed", "empty", "None")]
+        )
 
     def test_csv_field_limit_survives_host_global_limit_increase(self):
         rows = self._rows()

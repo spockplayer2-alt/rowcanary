@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1] - 2026-11-02
+
+- Enforce the documented string-field safety bound in JSON, including nested
+  extra data, so JSON cannot bypass the bound applied to CSV fields.
+- Reject invalid API column names before reading a file, with an actionable error.
+- Add regression coverage for both validation failures. Preserve all existing
+  CLI commands, default probes and exact CR/LF comparisons.
+
 ## [0.1.0] - 2026-11-02
 
 - Generate 24 deterministic, realistic edge-case CSV controls.

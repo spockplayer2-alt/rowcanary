@@ -14,8 +14,13 @@ ASSETS = Path(__file__).resolve().parents[1] / "assets"
 
 def check() -> None:
     vectors = sorted(ASSETS.glob("*.svg"))
-    if {p.name for p in vectors} != {"logo.svg", "logo-dark.svg", "logo-light.svg",
-                                    "icon.svg", "social-preview.svg"}:
+    if {p.name for p in vectors} != {
+        "logo.svg",
+        "logo-dark.svg",
+        "logo-light.svg",
+        "icon.svg",
+        "social-preview.svg",
+    }:
         raise SystemExit("Expected the five release SVG masters")
     for path in vectors:
         root = ET.fromstring(path.read_bytes())
@@ -32,12 +37,20 @@ def check() -> None:
             raise SystemExit(f"No vector paths in {path.name}")
         cairosvg.svg2png(url=str(path))
     exports = [(f"icon-{size}.png", "icon.svg", size, size) for size in (32, 64, 128, 256)]
-    exports += [("logo-512.png", "icon.svg", 512, 512),
-                ("social-preview.png", "social-preview.svg", 1280, 640)]
+    exports += [
+        ("logo-512.png", "icon.svg", 512, 512),
+        ("social-preview.png", "social-preview.svg", 1280, 640),
+    ]
     for png, master, width, height in exports:
-        expected = Image.open(io.BytesIO(cairosvg.svg2png(
-            url=str(ASSETS / master), output_width=width, output_height=height,
-        ))).convert("RGBA")
+        expected = Image.open(
+            io.BytesIO(
+                cairosvg.svg2png(
+                    url=str(ASSETS / master),
+                    output_width=width,
+                    output_height=height,
+                )
+            )
+        ).convert("RGBA")
         with Image.open(ASSETS / png) as actual:
             if actual.size != (width, height):
                 raise SystemExit(f"Wrong PNG size: {png}")

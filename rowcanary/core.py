@@ -28,7 +28,9 @@ PROBES: tuple[Probe, ...] = (
     Probe("plain", "normal text", "control", "Ordinary text changed"),
     Probe("zeroes", "00012345", "identifiers", "Leading zeroes may have been removed"),
     Probe("large-int", "12345678901234567890", "identifiers", "Long integer may have been rounded"),
-    Probe("scientific", "5E12", "identifiers", "Identifier may have been read as scientific notation"),
+    Probe(
+        "scientific", "5E12", "identifiers", "Identifier may have been read as scientific notation"
+    ),
     Probe("decimal", "19.9900", "numbers", "Decimal formatting or precision changed"),
     Probe("small-decimal", "0.000000123456789", "numbers", "Small decimal precision changed"),
     Probe("negative-zeroes", "-0009", "numbers", "Signed numeric-looking text changed"),
@@ -76,9 +78,13 @@ class Report:
         return not self.issues
 
     def as_dict(self) -> dict[str, Any]:
-        return {"ok": self.ok, "passed": self.passed, "total": self.total,
-                "input": self.input_path,
-                "issues": [issue.as_dict() for issue in self.issues]}
+        return {
+            "ok": self.ok,
+            "passed": self.passed,
+            "total": self.total,
+            "input": self.input_path,
+            "issues": [issue.as_dict() for issue in self.issues],
+        }
 
 
 class ProbeFileError(ValueError):
@@ -105,9 +111,15 @@ def _read_text(path: Path) -> str:
 
 
 def _validate_delimiter(delimiter: str) -> None:
-    if (not isinstance(delimiter, str) or len(delimiter) != 1
-            or delimiter in '\r\n\0"' or "\ud800" <= delimiter <= "\udfff"):
-        raise ProbeFileError("CSV delimiter must be one UTF-8 character other than CR, LF, NUL or double quote")
+    if (
+        not isinstance(delimiter, str)
+        or len(delimiter) != 1
+        or delimiter in '\r\n\0"'
+        or "\ud800" <= delimiter <= "\udfff"
+    ):
+        raise ProbeFileError(
+            "CSV delimiter must be one UTF-8 character other than CR, LF, NUL or double quote"
+        )
 
 
 def write_probes(path: Path, *, delimiter: str = ",") -> None:
@@ -142,8 +154,14 @@ def _load_csv(text: str, *, delimiter: str) -> tuple[list[dict[str, Any]], list[
             if len(fields) > len(columns):
                 raise ProbeFileError(f"CSV row {reader.line_num} has extra fields")
             # DictReader skips blank records, hiding rows added by an exporter.
-            row = {name: fields[index] if index < len(fields) else None
-                   for index, name in enumerate(columns)} if fields else {}
+            row = (
+                {
+                    name: fields[index] if index < len(fields) else None
+                    for index, name in enumerate(columns)
+                }
+                if fields
+                else {}
+            )
             rows.append(row)
         return rows, columns
     except csv.Error as exc:
@@ -175,9 +193,13 @@ def _reject_json_constant(token: str) -> None:
 
 def _load_json(text: str) -> list[dict[str, Any]]:
     try:
-        document = json.loads(text, object_pairs_hook=_json_object,
-                              parse_int=_JsonNumber, parse_float=_JsonNumber,
-                              parse_constant=_reject_json_constant)
+        document = json.loads(
+            text,
+            object_pairs_hook=_json_object,
+            parse_int=_JsonNumber,
+            parse_float=_JsonNumber,
+            parse_constant=_reject_json_constant,
+        )
     except json.JSONDecodeError as exc:
         raise ProbeFileError(f"Malformed JSON: {exc.msg} at line {exc.lineno}") from exc
     except RecursionError as exc:
@@ -188,12 +210,29 @@ def _load_json(text: str) -> list[dict[str, Any]]:
         raise ProbeFileError("JSON has too many rows")
     if any(not isinstance(item, dict) for item in document):
         raise ProbeFileError("Every JSON array item must be an object")
+    pending = [document]
+    while pending:
+        value = pending.pop()
+        if isinstance(value, str) and len(value) > MAX_FIELD_CHARS:
+            raise ProbeFileError("JSON field exceeds the safety limit")
+        if isinstance(value, dict):
+            pending.extend(value.keys())
+            pending.extend(value.values())
+        elif isinstance(value, list):
+            pending.extend(value)
     return document
 
 
-def check_file(path: Path, *, file_format: str = "auto",
-               id_column: str = ID_COLUMN, value_column: str = VALUE_COLUMN,
-               delimiter: str = ",") -> Report:
+def check_file(
+    path: Path,
+    *,
+    file_format: str = "auto",
+    id_column: str = ID_COLUMN,
+    value_column: str = VALUE_COLUMN,
+    delimiter: str = ",",
+) -> Report:
+    if any(not isinstance(name, str) or not name for name in (id_column, value_column)):
+        raise ProbeFileError("ID and value column names must be non-empty text")
     path = Path(path)
     text = _read_text(path)
     fmt = path.suffix.lower().lstrip(".") if file_format == "auto" else file_format
@@ -206,8 +245,7 @@ def check_file(path: Path, *, file_format: str = "auto",
         rows, columns = _load_csv(text, delimiter=delimiter)
     else:
         rows = _load_json(text)
-        columns = [name for name in (id_column, value_column)
-                   if any(name in row for row in rows)]
+        columns = [name for name in (id_column, value_column) if any(name in row for row in rows)]
     if (fmt == "csv" or rows) and (id_column not in columns or value_column not in columns):
         raise ProbeFileError(
             f"Missing required columns: {id_column!r} and/or {value_column!r}; "
@@ -219,11 +257,20 @@ def check_file(path: Path, *, file_format: str = "auto",
     passed = 0
     for index, row in enumerate(rows, start=2):
         if id_column not in row or value_column not in row:
-            issues.append(Issue("missing-column", str(index), "Exported row lacks required columns"))
+            issues.append(
+                Issue("missing-column", str(index), "Exported row lacks required columns")
+            )
             continue
         ident = row[id_column]
         if not isinstance(ident, str):
-            issues.append(Issue("invalid-id", str(index), "Probe identifier is no longer text", actual=repr(ident)))
+            issues.append(
+                Issue(
+                    "invalid-id",
+                    str(index),
+                    "Probe identifier is no longer text",
+                    actual=repr(ident),
+                )
+            )
             continue
         if ident in seen:
             issues.append(Issue("duplicate", ident, "Probe row occurs more than once"))
@@ -236,8 +283,9 @@ def check_file(path: Path, *, file_format: str = "auto",
         actual_value = row[value_column]
         if not isinstance(actual_value, str) or actual_value != probe.value:
             actual_display = actual_value if isinstance(actual_value, str) else repr(actual_value)
-            issues.append(Issue("changed", ident, probe.reason,
-                                expected=probe.value, actual=actual_display))
+            issues.append(
+                Issue("changed", ident, probe.reason, expected=probe.value, actual=actual_display)
+            )
         else:
             passed += 1
     for ident, probe in expected.items():

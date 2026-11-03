@@ -18,18 +18,38 @@ def check(directory: Path) -> None:
     with tarfile.open(sources[0]) as archive:
         source = {str(PurePosixPath(n).relative_to(n.split("/")[0])) for n in archive.getnames()}
     modules = {f"rowcanary/{name}.py" for name in ("__init__", "__main__", "cli", "core")}
-    required = modules | {"README.md", "LICENSE", "pyproject.toml", "MANIFEST.in",
-                          ".gitattributes", ".github/workflows/tests.yml",
-                          "tests/test_core.py", "tests/test_cli.py", "tests/test_parsing.py",
-                          "tests/test_cli_process.py", "tests/test_documentation.py",
-                          "examples/clean.csv", "examples/clean.json", "examples/altered.csv",
-                          "docs/publication.md", "docs/verification.md", "docs/release-notes.md",
-                          "assets/logo.svg", "assets/logo-dark.svg", "assets/logo-light.svg",
-                          "assets/icon.svg", "assets/logo-512.png", "assets/social-preview.svg",
-                          "assets/social-preview.png", "assets/FONT-LICENSE.txt"}
+    required = modules | {
+        "README.md",
+        "LICENSE",
+        "pyproject.toml",
+        "MANIFEST.in",
+        ".gitattributes",
+        ".github/workflows/tests.yml",
+        "tests/test_core.py",
+        "tests/test_cli.py",
+        "tests/test_parsing.py",
+        "tests/test_cli_process.py",
+        "tests/test_documentation.py",
+        "examples/clean.csv",
+        "examples/clean.json",
+        "examples/altered.csv",
+        "docs/publication.md",
+        "docs/verification.md",
+        "docs/release-notes.md",
+        "assets/logo.svg",
+        "assets/logo-dark.svg",
+        "assets/logo-light.svg",
+        "assets/icon.svg",
+        "assets/logo-512.png",
+        "assets/social-preview.svg",
+        "assets/social-preview.png",
+        "assets/FONT-LICENSE.txt",
+    }
     required |= {f"assets/icon-{size}.png" for size in (32, 64, 128, 256)}
     if not modules <= wheel or not required <= source:
-        raise SystemExit(f"Missing package members: wheel={modules-wheel}; source={required-source}")
+        raise SystemExit(
+            f"Missing package members: wheel={modules - wheel}; source={required - source}"
+        )
     if not any(n.endswith(".dist-info/entry_points.txt") for n in wheel):
         raise SystemExit("Wheel lacks its console entry point")
     if not any(n.endswith(".dist-info/licenses/LICENSE") for n in wheel):
@@ -43,7 +63,9 @@ def check(directory: Path) -> None:
             raise SystemExit(f"Unexpected generated/private file: {name}")
     if any(n.startswith(("assets/", "tests/", "docs/", "tools/")) for n in wheel):
         raise SystemExit("Wheel unexpectedly includes development files")
-    print(f"PASS: {len(wheel)} wheel members; {len(source)} source members; no development/private files in wheel.")
+    print(
+        f"PASS: {len(wheel)} wheel members; {len(source)} source members; no development/private files in wheel."
+    )
 
 
 if __name__ == "__main__":

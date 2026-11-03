@@ -10,6 +10,7 @@ venv/
 build/
 dist/
 .coverage
+.serena/
 .DS_Store
 rowcanary-probe.csv
 .trail/cache/

@@ -5,7 +5,12 @@ import unittest
 from pathlib import Path
 
 from rowcanary.core import (
-    PROBES, ID_COLUMN, VALUE_COLUMN, ProbeFileError, check_file, write_probes,
+    PROBES,
+    ID_COLUMN,
+    VALUE_COLUMN,
+    ProbeFileError,
+    check_file,
+    write_probes,
 )
 
 
@@ -89,7 +94,7 @@ class CoreTests(unittest.TestCase):
 
     def test_extra_csv_field(self):
         path = self.root / "bad.csv"
-        path.write_text(f'{ID_COLUMN},{VALUE_COLUMN}\nfoo,bar,baz\n', encoding="utf-8")
+        path.write_text(f"{ID_COLUMN},{VALUE_COLUMN}\nfoo,bar,baz\n", encoding="utf-8")
         with self.assertRaises(ProbeFileError):
             check_file(path)
 
@@ -119,7 +124,7 @@ class CoreTests(unittest.TestCase):
 
     def test_unsupported_json_root(self):
         path = self.root / "out.json"
-        path.write_text('{}', encoding="utf-8")
+        path.write_text("{}", encoding="utf-8")
         with self.assertRaises(ProbeFileError):
             check_file(path)
 
