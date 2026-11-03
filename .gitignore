@@ -17,3 +17,5 @@ rowcanary-probe.csv
 .trail/graph.db
 .trail/state.json
 Thumbs.db
+.playwright-cli/
+output/playwright/

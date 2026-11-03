@@ -1,5 +1,21 @@
 # Release verification
 
+## v0.4.0 — 2026-11-03
+
+Local release suite: **104 tests passed**. Ruff, Twine, archive/secret checks
+and clean wheel/sdist CLI plus HTTP/static-route installation checks passed.
+
+The suite adds real ephemeral HTTP tests for all five generation/check formats,
+custom CRLF/null and large-integer controls, UTF-8 BOM exports, Host/Origin/token
+checks, fixed static routes and bounded/malformed requests. Independent review
+found JavaScript custom-number rounding and an overridden BOM-aware default;
+both were reproduced and fixed before release.
+
+Actual Edge browser checks generated/downloaded CSV, uploaded it for 24/24 PASS,
+downloaded JSON/HTML reports and exercised the dark theme at 390px without
+horizontal overflow. Local browser artifacts are ignored, not runtime resources.
+The UI uses the existing canary icon, local assets and no new runtime dependency.
+
 ## v0.3.0 — 2026-11-03
 
 Local suite: 96 tests, including classifications and conservative rounding/date

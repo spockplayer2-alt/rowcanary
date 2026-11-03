@@ -1,6 +1,6 @@
 # Development progress
 
-Target: v1.0.0. Current published version: **v0.2.0**.
+Target: v1.0.0. Current published version: **v0.3.0**.
 
 **Resumed on 2026-11-03 with v0.3.0.** Work proceeds sequentially through the
 existing roadmap; no PyPI publication is authorized.
@@ -53,7 +53,7 @@ existing roadmap; no PyPI publication is authorized.
 - pip-audit found no known vulnerabilities in the three installed runtime
   dependencies. Evidence: `.local/verification/audit-0.2.0.json`.
 
-## Active milestone: 0.3.0 — local gates passed; hosted checks/publication pending
+## Completed milestone: 0.3.0
 
 - Preserved the previous untracked tests, reproduced their 15 errors, then
   implemented diagnostics, tentative causes, severity/types/guidance, reorder
@@ -72,14 +72,37 @@ existing roadmap; no PyPI publication is authorized.
   `.local/verification/audit-0.3.0.json`. Trail check reports no conflicts.
 - Final self-review also reproduced a diagnostic depending on the host decimal
   rounding mode; explicitly use half-even. Added its regression (96 tests total).
+- Commit `d64a4d4`, pushed to main. All 17 jobs passed in hosted run
+  **41667334334**. Published v0.3.0 and verified all four public attachment
+  hashes against local artifacts. Evidence: `.local/verification/publish-0.3.0.log`.
 - Ruling: keep human demo output compatible; detailed diagnostic metadata is in
   JSON/HTML. Reorder observations appear in human output without failing.
 
+## Active milestone: 0.4.0 — local gates passed; hosted checks/publication pending
+
+- Six new real HTTP boundary tests reproduced the absent UI, then passed:
+  all five formats, custom CRLF/null controls, Host/Origin/token/content-type,
+  static route isolation, malformed uploads and pre-read request size bounds.
+- `serve --port/--open`, packaged HTML/CSS/JS and the existing icon implemented.
+  Single serial loopback server; temporary request files, no external resources.
+- Actual Edge browser generated/downloaded CSV and uploaded it for 24/24 PASS.
+  Dark theme at 390px had no horizontal overflow. Screenshots and downloads:
+  `output/playwright/` and `.playwright-cli/` (ignored local evidence).
+- Independent review fixed two findings: preserve raw custom JSON instead of
+  rounding integers in JavaScript; leave encoding blank for BOM-aware checks.
+  Reproduced failures first. Actual browser download retained 9007199254740993
+  exactly; actual UTF-8-BOM CSV upload passed 24/24 after the fix.
+- All **104 tests passed** (15.558 seconds), Ruff/Twine/archive/secret checks and
+  clean wheel/sdist CLI and HTTP/static-asset installs passed. No added runtime
+  dependency; the v0.3.0 same-day audit covers the unchanged dependency versions.
+- Ruling: use the standard-library server and base64 JSON for this single-user
+  loopback tool, avoiding new runtime dependencies. No remote hosting support.
+
 ## Exact next action
 
-1. Finish v0.3.0 release gates, commit/push, wait for all 17 hosted jobs and
-   publish/verify public artifacts. Do not recreate the implementation.
-2. Proceed with v0.4.0 loopback local UI, then the remaining roadmap in order.
+1. Finish v0.4.0 independent review, browser/download/keyboard checks, full suite
+   and release gates; commit/push, wait for all 17 jobs, publish/verify artifacts.
+2. Proceed with v0.5.0 memory/time and streaming/resource work in roadmap order.
    Use tests first; preserve exact line breaks, stable IDs and issue codes.
 3. Never publish to PyPI or rewrite existing release tags/history.
 
@@ -96,7 +119,7 @@ existing roadmap; no PyPI publication is authorized.
   Read it before reuse. It is local tooling, not committed product code.
 - Local release artifacts/logs: `.local/v0.1.1/`, `.local/v0.2.0/` and
   `.local/verification/`. Development changes are committed through v0.2.0;
-  v0.3.0 implementation and documentation are currently uncommitted.
+  v0.3.0 is committed/published; v0.4.0 UI work is currently uncommitted.
 - Existing logo identity retained. Five SVGs render; six PNGs match masters.
 - Real Excel, Google Sheets, LibreOffice and CRM round trips remain unverified;
   the format tests exercise parsers/generated files, not those applications.
@@ -104,5 +127,5 @@ existing roadmap; no PyPI publication is authorized.
   changing the writer. Do not replace bounded binary decoding with `read_text`.
 
 See [development plan](docs/development-plan.md) for the remaining milestones.
-No milestone after 0.2.0 has been released yet. v0.3.0 is implemented; do not
+No milestone after 0.3.0 has been released yet. v0.4.0 is implemented; do not
 claim publication until hosted checks and public download verification pass.

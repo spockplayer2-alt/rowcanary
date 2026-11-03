@@ -120,8 +120,15 @@ def main(argv: list[str] | None = None) -> int:
             "--report", type=Path, help="Create a new standalone .html or .json report"
         )
     sub.add_parser("demo", help="Run a self-contained example with intentionally broken values")
+    server = sub.add_parser("serve", help="Open the local-only browser interface")
+    server.add_argument("--port", type=int, default=8765)
+    server.add_argument("--open", action="store_true", help="Open the local URL in your browser")
     args = parser.parse_args(argv)
     try:
+        if args.command == "serve":
+            from .web import serve
+
+            return serve(port=args.port, open_browser=args.open)
         if args.command == "make":
             probes = select_probes(args.probe_set, args.custom_values)
             write_probes(

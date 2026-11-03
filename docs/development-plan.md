@@ -10,7 +10,7 @@ publication is authorized. No customer data or credentials enter test fixtures.
   deterministic extended/custom probe sets and typed comparisons.
 - [x] 0.3.0: evidence-based diagnostics, severity, JSON schema, safe HTML,
   report export, batch checks and documented exit status.
-- [ ] 0.4.0: loopback-only local web UI with upload, generation, comparison,
+- [x] 0.4.0: loopback-only local web UI with upload, generation, comparison,
   downloads, accessible themes and no external resources.
 - [ ] 0.5.0: measure memory/time, stream line-based formats, bound archives,
   uploads and concurrent operations; large-file and malformed-input tests.

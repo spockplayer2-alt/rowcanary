@@ -5,7 +5,7 @@
   </picture>
   <h1>RowCanary</h1>
   <p><strong>Detect silent data changes during import/export workflows.</strong></p>
-  <p>Local Python CLI · CSV, TSV, JSON, JSONL and XLSX · MIT</p>
+  <p>Local Python CLI and browser UI · CSV, TSV, JSON, JSONL and XLSX · MIT</p>
 </div>
 
 An import can succeed while changing the data. A spreadsheet might turn
@@ -52,7 +52,7 @@ python -m pip install .
 rowcanary --version
 ```
 
-The version output is `rowcanary 0.3.0`. Use a virtual environment if your Python
+The version output is `rowcanary 0.4.0`. Use a virtual environment if your Python
 installation requires one. If the console script is not on your `PATH`, use
 `python -m rowcanary` with the Python interpreter that installed the package.
 You can also run the module directly from the extracted source directory.
@@ -62,6 +62,11 @@ install .` in the directory containing `pyproject.toml`. RowCanary has not been
 published to PyPI. Do not assume that `pip install rowcanary` installs this project.
 
 ## Quick start
+
+For the local browser interface, run `rowcanary serve --open`. It binds only to
+`127.0.0.1`, uses no external resources and provides generation, upload/check,
+light/dark themes and JSON/HTML downloads. Stop it with Ctrl+C. See the
+[local UI guide](docs/web-ui.md) for privacy, limits and port options.
 
 ```bash
 python -m rowcanary make probe.csv

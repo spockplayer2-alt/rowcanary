@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0] - 2026-11-03
+
+- Add `rowcanary serve` with a browser interface bound only to `127.0.0.1`.
+- Generate/download controls and upload/check exports in all five formats,
+  including custom controls, exact types and strict-order comparison.
+- Download versioned JSON and escaped standalone HTML reports.
+- Include labeled keyboard-accessible controls, responsive light/dark themes,
+  the existing canary identity and no external resources or runtime dependencies.
+- Enforce exact Host/Origin and per-session token checks, fixed static routes,
+  request/upload limits, temporary files and no-store/security headers.
+
 ## [0.3.0] - 2026-11-03
 
 - Add evidence-based classifications, severity, scalar types, observations,

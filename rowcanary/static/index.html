@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="rowcanary-token" content="{{TOKEN}}">
+  <meta name="color-scheme" content="light dark">
+  <title>RowCanary · Local data checks</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to workspace</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="RowCanary home"><img src="/icon.svg" width="42" height="42" alt=""><span>RowCanary</span></a>
+    <div class="header-actions"><span class="local-badge">● Local by design</span><button id="theme" type="button" aria-label="Switch color theme">Dark theme</button></div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="headline">
+      <div><p class="eyebrow">A small test. A clearer picture.</p><h1 id="headline">Know what survived<br>the round trip.</h1><p class="lede">Imports can succeed while quietly changing your data. Send known controls through your workflow, then check what comes back.</p></div>
+      <aside class="example" aria-label="Example data change"><span class="eyebrow">The silent difference</span><div><code>00012345</code><span aria-hidden="true">↘</span><code class="changed">12345</code></div><p>Same-looking number.<br>A different identifier.</p></aside>
+    </section>
+    <div class="privacy"><span aria-hidden="true">↳</span> Your files stay on this computer. No account, uploads to a cloud service or external resources.</div>
+    <section id="workspace" aria-label="Control workspace" tabindex="-1">
+      <div class="steps"><button type="button" id="step-make" class="step active" aria-pressed="true"><span>01</span> Generate controls</button><button type="button" id="step-check" class="step" aria-pressed="false"><span>02</span> Check your export</button></div>
+      <form id="controls">
+        <div class="panel-heading"><div><p class="eyebrow" id="panel-eyebrow">Before your import</p><h2 id="panel-title">Start with values you can trust.</h2></div><span class="tag">5 formats · exact comparison</span></div>
+        <p id="panel-description">Generate a test file, pass it through an isolated import/export workflow, then bring the export back here.</p>
+        <div id="upload-section" hidden><label class="upload" for="upload"><strong>Choose your exported file</strong><span>CSV, TSV, JSON, JSONL or XLSX · up to 32 MiB</span><input id="upload" type="file" accept=".csv,.tsv,.json,.jsonl,.xlsx"></label></div>
+        <div class="fields"><label>File format<select id="format"><option value="csv">CSV</option><option value="tsv">TSV</option><option value="json">JSON</option><option value="jsonl">JSONL</option><option value="xlsx">XLSX</option></select></label><label>Control set<select id="probe-set"><option value="default">Default · 24 controls</option><option value="extended">Extended controls</option><option value="none">Custom controls only</option></select></label></div>
+        <details><summary>Advanced settings</summary><div class="fields advanced"><label>Text encoding (blank = default)<input id="encoding" value="" placeholder="UTF-8; BOM-aware when checking" maxlength="64" spellcheck="false"></label><label>CSV delimiter<select id="delimiter"><option value=",">Comma (,)</option><option value=";">Semicolon (;)</option><option value="&#9;">Tab</option><option value="|">Pipe (|)</option></select></label><label>ID column<input id="id-column" value="_rowcanary_id" maxlength="255" spellcheck="false"></label><label>Value column<input id="value-column" value="_rowcanary_value" maxlength="255" spellcheck="false"></label></div><label class="custom-label">Additional custom controls (JSON array)<textarea id="custom" rows="3" spellcheck="false" placeholder='[{"id":"sku","value":"00123"}]'></textarea></label><label class="checkbox"><input id="strict-order" type="checkbox"> Require the original row order when checking</label></details>
+        <p class="warning"><strong>Use isolated test data.</strong> Formula-like controls may be evaluated by spreadsheet software. Import them as literal text; never mix probes into production records.</p>
+        <div class="action-row"><button type="submit" id="submit" class="primary">Download controls <span aria-hidden="true">↓</span></button><span id="status" role="status" aria-live="polite"></span></div>
+      </form>
+    </section>
+    <section id="results" class="results" aria-labelledby="result-title" hidden><div class="result-heading"><div><p class="eyebrow">Your control check</p><h2 id="result-title" tabindex="-1"></h2><p id="result-summary"></p></div><div class="downloads"><button type="button" id="download-json">Download JSON</button><button type="button" id="download-html">Download HTML</button></div></div><div id="issues"></div><p class="scope">A passing result covers these control samples only. It cannot guarantee the integrity of an entire dataset. Possible causes are tentative.</p></section>
+    <section class="how" aria-label="How it works"><article><span>01 / GENERATE</span><h3>Make the edge cases visible.</h3><p>Leading zeroes, long numbers, Unicode, spaces, dates and formula-like text.</p></article><article><span>02 / ROUND TRIP</span><h3>Use the workflow you rely on.</h3><p>Import and export the controls in an isolated area of your application.</p></article><article><span>03 / COMPARE</span><h3>See the exact differences.</h3><p>No trimming, normalization or numeric guessing. Just what changed.</p></article></section>
+  </main>
+  <footer><strong>RowCanary</strong><span>Local controls. Observable evidence.</span><span>Stop the server with Ctrl+C in your terminal.</span></footer>
+</body>
+</html>

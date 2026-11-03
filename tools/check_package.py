@@ -19,6 +19,9 @@ def check(directory: Path) -> None:
         source = {str(PurePosixPath(n).relative_to(n.split("/")[0])) for n in archive.getnames()}
     modules = {f"rowcanary/{path.name}" for path in Path("rowcanary").glob("*.py")}
     modules.add("rowcanary/report.schema.json")
+    modules |= {
+        f"rowcanary/static/{name}" for name in ("index.html", "app.css", "app.js", "icon.svg")
+    }
     required = modules | {
         "README.md",
         "LICENSE",
