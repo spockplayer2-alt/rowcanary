@@ -15,6 +15,8 @@ VALUE_COLUMN = "_rowcanary_value"
 MAX_BYTES = 32 * 1024 * 1024
 MAX_ROWS = 100_000
 MAX_FIELD_CHARS = 128 * 1024
+MAX_ISSUES = 10_000
+MAX_DIAGNOSTIC_CHARS = 2 * 1024 * 1024
 
 
 @dataclass(frozen=True)
@@ -115,10 +117,16 @@ def _read_bytes(path: Path) -> bytes:
         # A bounded binary read also protects against a file growing after stat.
         # Decoding bytes directly preserves CR, LF and CRLF inside CSV cells.
         with path.open("rb") as stream:
-            data = stream.read(MAX_BYTES + 1)
-        if len(data) > MAX_BYTES:
-            raise ProbeFileError(f"File exceeds {MAX_BYTES // (1024 * 1024)} MiB safety limit")
-        return data
+            buffer = io.BytesIO()
+            while True:
+                chunk = stream.read(min(64 * 1024, MAX_BYTES + 1 - buffer.tell()))
+                if not chunk:
+                    return buffer.getvalue()
+                buffer.write(chunk)
+                if buffer.tell() > MAX_BYTES:
+                    raise ProbeFileError(
+                        f"File exceeds {MAX_BYTES // (1024 * 1024)} MiB safety limit"
+                    )
     except OSError as exc:
         raise ProbeFileError(f"Cannot read file: {exc}") from exc
 
@@ -255,6 +263,8 @@ def _load_json(text: str) -> list[dict[str, Any]]:
     pending = [document]
     while pending:
         value = pending.pop()
+        if isinstance(value, _JsonNumber) and len(value.token) > MAX_FIELD_CHARS:
+            raise ProbeFileError("JSON numeric field exceeds the safety limit")
         if isinstance(value, str) and len(value) > MAX_FIELD_CHARS:
             raise ProbeFileError("JSON field exceeds the safety limit")
         if isinstance(value, dict):
@@ -276,8 +286,7 @@ def check_file(
     encoding: str = "utf-8-sig",
     strict_order: bool = False,
 ) -> Report:
-    from .diagnostics import diagnose
-    from .formats import load_rows
+    from .streaming import open_rows
     from .probes import validate_probes
 
     if any(not isinstance(name, str) or not name for name in (id_column, value_column)):
@@ -286,30 +295,53 @@ def check_file(
     probes = validate_probes(probes)
     if id_column == value_column:
         raise ProbeFileError("ID and value columns must be different")
-    rows, columns, fmt = load_rows(path, file_format, delimiter, encoding)
-    if columns is None:
-        columns = [name for name in (id_column, value_column) if any(name in row for row in rows)]
-    if (fmt in ("csv", "tsv", "xlsx") or rows) and (
-        id_column not in columns or value_column not in columns
-    ):
-        raise ProbeFileError(
-            f"Missing required columns: {id_column!r} and/or {value_column!r}; "
-            "use --id-column and --value-column if the exporter renamed them"
+    with open_rows(path, file_format, delimiter, encoding) as (rows, columns, fmt):
+        return _compare_rows(
+            rows, columns, fmt, probes, id_column, value_column, strict_order, path
         )
+
+
+def _compare_rows(rows, columns, fmt, probes, id_column, value_column, strict_order, path):
+    from .diagnostics import diagnose
+
+    required = {id_column, value_column}
+    column_error = (
+        f"Missing required columns: {id_column!r} and/or {value_column!r}; "
+        "use --id-column and --value-column if the exporter renamed them"
+    )
+    if columns is not None and not required <= set(columns):
+        raise ProbeFileError(column_error)
+    found_columns = set()
+    row_count = 0
     expected = {probe.ident: probe for probe in probes}
     seen: set[str] = set()
     issues: list[Issue] = []
+    diagnostic_chars = 0
+
+    def add_issue(issue):
+        nonlocal diagnostic_chars
+        for value in issue.as_dict().values():
+            if isinstance(value, str):
+                diagnostic_chars += len(value)
+            elif isinstance(value, list):
+                diagnostic_chars += sum(len(part) for part in value)
+        if len(issues) >= MAX_ISSUES or diagnostic_chars > MAX_DIAGNOSTIC_CHARS:
+            raise ProbeFileError(
+                "Report exceeds the diagnostic safety limit; use a smaller control set"
+            )
+        issues.append(issue)
+
     order: list[str] = []
     passed = 0
     for index, row in enumerate(rows, start=2):
+        row_count += 1
+        found_columns.update(required.intersection(row))
         if id_column not in row or value_column not in row:
-            issues.append(
-                Issue("missing-column", str(index), "Exported row lacks required columns")
-            )
+            add_issue(Issue("missing-column", str(index), "Exported row lacks required columns"))
             continue
         ident = row[id_column]
         if not isinstance(ident, str):
-            issues.append(
+            add_issue(
                 Issue(
                     "invalid-id",
                     str(index),
@@ -319,11 +351,11 @@ def check_file(
             )
             continue
         if ident in seen:
-            issues.append(Issue("duplicate", ident, "Probe row occurs more than once"))
+            add_issue(Issue("duplicate", ident, "Probe row occurs more than once"))
             continue
         seen.add(ident)
         if ident not in expected:
-            issues.append(Issue("unexpected", ident, "Unexpected row was added"))
+            add_issue(Issue("unexpected", ident, "Unexpected row was added"))
             continue
         probe = expected[ident]
         order.append(ident)
@@ -335,7 +367,7 @@ def check_file(
         )
         if not _values_equal(actual_value, expected_value):
             actual_display = actual_value if isinstance(actual_value, str) else repr(actual_value)
-            issues.append(
+            add_issue(
                 Issue(
                     "changed",
                     ident,
@@ -347,9 +379,11 @@ def check_file(
             )
         else:
             passed += 1
+    if columns is None and row_count and not required <= found_columns:
+        raise ProbeFileError(column_error)
     for ident, probe in expected.items():
         if ident not in seen:
-            issues.append(
+            add_issue(
                 Issue(
                     "missing", ident, "Probe row was dropped", expected=_display_value(probe.value)
                 )
@@ -364,7 +398,7 @@ def check_file(
             guidance="Disable sorting in the exporter if row order matters to your workflow.",
         )
         if strict_order:
-            issues.append(reordered)
+            add_issue(reordered)
         else:
             observations = (reordered,)
     return Report(

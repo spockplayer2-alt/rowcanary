@@ -1,6 +1,6 @@
 # Development progress
 
-Target: v1.0.0. Current published version: **v0.3.0**.
+Target: v1.0.0. Current published version: **v0.4.0**.
 
 **Resumed on 2026-11-03 with v0.3.0.** Work proceeds sequentially through the
 existing roadmap; no PyPI publication is authorized.
@@ -78,7 +78,7 @@ existing roadmap; no PyPI publication is authorized.
 - Ruling: keep human demo output compatible; detailed diagnostic metadata is in
   JSON/HTML. Reorder observations appear in human output without failing.
 
-## Active milestone: 0.4.0 — local gates passed; hosted checks/publication pending
+## Completed milestone: 0.4.0
 
 - Six new real HTTP boundary tests reproduced the absent UI, then passed:
   all five formats, custom CRLF/null controls, Host/Origin/token/content-type,
@@ -97,12 +97,35 @@ existing roadmap; no PyPI publication is authorized.
   dependency; the v0.3.0 same-day audit covers the unchanged dependency versions.
 - Ruling: use the standard-library server and base64 JSON for this single-user
   loopback tool, avoiding new runtime dependencies. No remote hosting support.
+- Commit `ba8be20`; all 17 jobs passed in hosted run **41669984337**.
+  Published v0.4.0 and verified all four public attachment hashes.
+
+## Active milestone: 0.5.0 — local gates passed; hosted checks/publication pending
+
+- Stream CSV/TSV/JSONL with bounded readers and exact newline decoding. Compare
+  once; retain bounded buffered JSON arrays/XLSX. Close streams on every exit.
+- Bound issue count/diagnostic text and numeric JSON tokens; reject duplicate
+  ZIP members. Limit UI rendering to 200 items and server backlog to four.
+- All **115 tests passed** (14.478 seconds). Review found a JSONL physical-line
+  count bypass with multiple objects per line; both parsers now reject it.
+  Review exercised 2,400 differential cases with no report/error mismatch,
+  stale-stat limits and native Windows handle cleanup after errors.
+- Benchmarks exposed a 33.7 MB allocation for an 8 KiB read; a failing regression
+  now passes after chunked buffered reads. Final 10,000-control measurements in
+  `.local/verification/benchmark-0.5.0.json` and `docs/performance.md` cover all
+  five formats; all exact comparisons passed. These are Python allocations,
+  not RSS. New streaming parser peaks are approximately 165–185 KB.
+- Actual browser displayed 200 of 524 issues with an explicit full-download note.
+  Downloaded JSON retained all 524 items. Ruff, Twine, package/secret inspection,
+  clean wheel/sdist CLI and HTTP/static installs passed on final source.
+- Ruling: reject oversized diagnostics as an operational error instead of
+  presenting a partial pass. No schema or legacy issue-code change.
 
 ## Exact next action
 
-1. Finish v0.4.0 independent review, browser/download/keyboard checks, full suite
-   and release gates; commit/push, wait for all 17 jobs, publish/verify artifacts.
-2. Proceed with v0.5.0 memory/time and streaming/resource work in roadmap order.
+1. Finish v0.5.0 release gates and full report-download verification; commit/push,
+   wait for all 17 jobs, publish/verify artifacts.
+2. Proceed with v0.6.0 compatibility fixtures/matrix and available live tests.
    Use tests first; preserve exact line breaks, stable IDs and issue codes.
 3. Never publish to PyPI or rewrite existing release tags/history.
 
@@ -119,7 +142,7 @@ existing roadmap; no PyPI publication is authorized.
   Read it before reuse. It is local tooling, not committed product code.
 - Local release artifacts/logs: `.local/v0.1.1/`, `.local/v0.2.0/` and
   `.local/verification/`. Development changes are committed through v0.2.0;
-  v0.3.0 is committed/published; v0.4.0 UI work is currently uncommitted.
+  v0.4.0 is committed/published; v0.5.0 resource work is currently uncommitted.
 - Existing logo identity retained. Five SVGs render; six PNGs match masters.
 - Real Excel, Google Sheets, LibreOffice and CRM round trips remain unverified;
   the format tests exercise parsers/generated files, not those applications.
@@ -127,5 +150,5 @@ existing roadmap; no PyPI publication is authorized.
   changing the writer. Do not replace bounded binary decoding with `read_text`.
 
 See [development plan](docs/development-plan.md) for the remaining milestones.
-No milestone after 0.3.0 has been released yet. v0.4.0 is implemented; do not
+No milestone after 0.4.0 has been released yet. v0.5.0 is implemented; do not
 claim publication until hosted checks and public download verification pass.

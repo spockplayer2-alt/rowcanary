@@ -36,6 +36,10 @@ It does not retain an upload history. Browser download history/files follow your
 browser's settings. Temporary files can remain after forced termination or a
 machine crash; normal request completion removes them.
 
+The page displays at most 200 diagnostic items and clearly marks larger results.
+JSON/HTML downloads retain all items within the diagnostic safety limits; no
+partial passing report is returned when a resource limit is exceeded.
+
 Uploads are limited to 32 MiB, request bodies have an additional base64 envelope
 limit, and parser field/row/archive limits still apply. Requests run serially,
 with a ten-second socket timeout. This is a single-user local tool. Do not expose

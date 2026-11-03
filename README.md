@@ -52,7 +52,7 @@ python -m pip install .
 rowcanary --version
 ```
 
-The version output is `rowcanary 0.4.0`. Use a virtual environment if your Python
+The version output is `rowcanary 0.5.0`. Use a virtual environment if your Python
 installation requires one. If the console script is not on your `PATH`, use
 `python -m rowcanary` with the Python interpreter that installed the package.
 You can also run the module directly from the extracted source directory.

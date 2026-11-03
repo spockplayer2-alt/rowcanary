@@ -12,7 +12,7 @@ and settings as the data you want to protect, using isolated test records.
   records are allowed. Extra fields beyond the header are malformed. Short
   records retain absent values as missing data. Blank records are audited.
 - JSON: UTF-8, optional leading BOM, one array of objects. Duplicate object keys,
-  `NaN` and infinity constants are invalid. Numeric tokens of any precision
+  `NaN` and infinity constants are invalid. Bounded numeric tokens
   remain non-text values; comparison never rounds or converts them into strings.
 - Both generated column names must survive, or be selected with `--id-column`
   and `--value-column`. These options must name different columns.
@@ -32,12 +32,25 @@ and settings as the data you want to protect, using isolated test records.
 - At most 32 MiB of file bytes; the read itself is bounded, not just a preceding
   size check.
 - At most 100,000 exported records, including blank CSV records.
-- CSV fields are limited to 128 Ki characters; the host interpreter's CSV parser
+- Text fields and JSON numeric tokens are limited to 128 Ki characters; the host interpreter's CSV parser
   can impose a lower limit if another library changes its global setting.
-- JSON is parsed in memory before its record count is checked. Parsed Python
+- CSV, TSV and JSONL are streamed with exact in-cell CR/LF/CRLF preservation.
+  JSONL requires exactly one object on each nonblank line. Reads remain bounded
+  even if the file grows after its initial size check; handles close on errors.
+- JSON arrays are parsed in memory before their record count is checked. Parsed Python
   objects and reports take additional memory; 32 MiB is not a process-memory cap.
   Excessive JSON nesting is rejected when it exceeds the interpreter's parser
   limits. Use the utility on small control exports, not large production dumps.
+- XLSX ZIPs allow at most 1,000 members and 64 MiB declared expansion; encrypted
+  and duplicate members are rejected. Workbooks are read without formula
+  evaluation, external-link retention or extraction to arbitrary filesystem paths.
+- Reports allow at most 10,000 issues and 2 Mi characters of diagnostic text
+  (including metadata). Exceeding either limit is an operational error, never
+  a partial passing report. Reduce the control set and rerun.
+- The local UI serializes operations, limits its listen backlog to four, and
+  checks upload/request sizes and HTTP framing before reading bodies. It renders
+  the first 200 diagnostic items; downloads retain every item within the limits.
+  See [performance measurements](performance.md) and the [UI guide](web-ui.md).
 
 ## Interpretation and safety
 

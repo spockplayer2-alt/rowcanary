@@ -59,7 +59,10 @@ function showReport(report) {
   $('result-title').textContent = report.ok ? 'Your controls survived.' : 'Differences need a closer look.';
   $('result-summary').textContent = `${report.passed} / ${report.total} values preserved · ${report.issues.length} issues · ${report.observations.length} observations`;
   $('issues').replaceChildren();
-  for (const issue of [...report.issues, ...report.observations]) {
+  const allIssues = [...report.issues, ...report.observations];
+  $('issue-limit').hidden = allIssues.length <= 200;
+  $('issue-limit').textContent = `Showing the first 200 of ${allIssues.length} items. Download a report to read every item.`;
+  for (const issue of allIssues.slice(0, 200)) {
     const card = document.createElement('article');
     card.className = 'issue';
     const heading = document.createElement('h3');

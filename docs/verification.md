@@ -1,5 +1,15 @@
 # Release verification
 
+## v0.5.0 — 2026-11-03
+
+All 115 tests passed locally. Streaming/resource tests cover parser allocations,
+exact buffer-boundary line breaks, row/byte/diagnostic bounds, numeric fields,
+duplicate ZIP members, concurrent isolation and hostile HTTP framing.
+Independent review ran 2,400 differential cases against the prior comparator
+without a report/error mismatch, plus stale-stat and Windows handle-closure
+checks. A JSONL row-count bypass was reproduced and fixed in both adapters.
+All-format measurements and their limits are in [performance](performance.md).
+
 ## v0.4.0 — 2026-11-03
 
 Local release suite: **104 tests passed**. Ruff, Twine, archive/secret checks

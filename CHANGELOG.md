@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.0] - 2026-11-03
+
+- Stream CSV, TSV and JSONL through bounded, context-managed readers, preserving
+  exact CR/LF/CRLF and enforcing byte limits even after stale size checks.
+- Compare streamed records once without consuming JSONL rows during column
+  inference; close input handles after success and failure.
+- Bound diagnostic counts/text and JSON numeric fields; reject duplicate XLSX
+  archive members and multiple objects per JSONL line.
+- Avoid reserving the entire byte limit for small buffered reads.
+- Bound the local server backlog, test concurrent isolation and hostile framing,
+  and render only the first 200 UI items while retaining complete downloads.
+- Add reproducible synthetic time/Python-allocation benchmarks; document that
+  JSON arrays/XLSX remain buffered and measurements do not represent process RSS.
+
 ## [0.4.0] - 2026-11-03
 
 - Add `rowcanary serve` with a browser interface bound only to `127.0.0.1`.

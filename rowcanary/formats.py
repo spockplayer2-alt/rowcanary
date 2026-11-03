@@ -43,6 +43,8 @@ def _load_xlsx(data: bytes):
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             entries = archive.infolist()
+            if len({entry.filename for entry in entries}) != len(entries):
+                raise core.ProbeFileError("XLSX has duplicate archive members")
             if len(entries) > 1000 or sum(e.file_size for e in entries) > 64 * 1024 * 1024:
                 raise core.ProbeFileError("XLSX expanded archive exceeds the safety limit")
             if any(e.flag_bits & 1 for e in entries):
@@ -113,6 +115,8 @@ def load_rows(path: Path, file_format: str, delimiter: str, encoding: str):
                 if len(rows) >= core.MAX_ROWS:
                     raise core.ProbeFileError("JSONL has too many rows")
                 row = core._load_json("[" + line + "]")
+                if len(row) != 1:
+                    raise core.ProbeFileError("JSONL requires exactly one object per line")
                 rows.extend(row)
             columns = None
     return rows, columns, fmt

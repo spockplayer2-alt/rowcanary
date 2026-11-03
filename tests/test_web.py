@@ -145,3 +145,35 @@ class WebTests(unittest.TestCase):
         )
         self.assertEqual(status, 200, checked)
         self.assertTrue(checked["report"]["ok"])
+
+    def test_duplicate_lengths_and_transfer_encoding_are_rejected(self):
+        for transfer in (False, True):
+            connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=4)
+            self.addCleanup(connection.close)
+            connection.putrequest("POST", "/api/make")
+            connection.putheader("Origin", self.origin)
+            connection.putheader("X-RowCanary-Token", self.server.token)
+            connection.putheader("Content-Type", "application/json")
+            connection.putheader("Content-Length", "2")
+            if transfer:
+                connection.putheader("Transfer-Encoding", "chunked")
+            else:
+                connection.putheader("Content-Length", "2")
+            connection.endheaders(b"{}")
+            self.assertEqual(connection.getresponse().status, 400)
+
+    def test_concurrent_clients_keep_custom_controls_separate(self):
+        from concurrent.futures import ThreadPoolExecutor
+
+        def make(value):
+            options = {
+                "format": "json",
+                "probe_set": "none",
+                "custom_values_json": json.dumps([{"id": "x", "value": value}]),
+            }
+            status, _, result = self.post("/api/make", options)
+            return status, json.loads(base64.b64decode(result["data"]))[0]["_rowcanary_value"]
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            results = list(executor.map(make, ("first", "second")))
+        self.assertEqual(results, [(200, "first"), (200, "second")])

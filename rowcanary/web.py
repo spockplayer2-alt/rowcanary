@@ -210,11 +210,15 @@ class _Handler(BaseHTTPRequestHandler):
             self._reply(400, {"error": "Local operation failed or upload timed out"})
 
 
+class _LocalServer(HTTPServer):
+    request_queue_size = 4
+
+
 def make_server(*, port=8765):
     """Create a server bound only to IPv4 loopback; port 0 requests a free port."""
     if isinstance(port, bool) or not isinstance(port, int) or not 0 <= port <= 65535:
         raise ProbeFileError("Port must be an integer from 0 through 65535")
-    server = HTTPServer(("127.0.0.1", port), _Handler)
+    server = _LocalServer(("127.0.0.1", port), _Handler)
     server.token = secrets.token_urlsafe(32)
     return server
 

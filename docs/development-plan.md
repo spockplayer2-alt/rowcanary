@@ -12,7 +12,7 @@ publication is authorized. No customer data or credentials enter test fixtures.
   report export, batch checks and documented exit status.
 - [x] 0.4.0: loopback-only local web UI with upload, generation, comparison,
   downloads, accessible themes and no external resources.
-- [ ] 0.5.0: measure memory/time, stream line-based formats, bound archives,
+- [x] 0.5.0: measure memory/time, stream line-based formats, bound archives,
   uploads and concurrent operations; large-file and malformed-input tests.
 - [ ] 0.6.0: reproducible compatibility fixtures, matrix, live tests where
   applications are available, clearly labeled evidence.
