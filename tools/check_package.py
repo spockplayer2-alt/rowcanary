@@ -18,6 +18,7 @@ def check(directory: Path) -> None:
     with tarfile.open(sources[0]) as archive:
         source = {str(PurePosixPath(n).relative_to(n.split("/")[0])) for n in archive.getnames()}
     modules = {f"rowcanary/{path.name}" for path in Path("rowcanary").glob("*.py")}
+    modules.add("rowcanary/report.schema.json")
     required = modules | {
         "README.md",
         "LICENSE",

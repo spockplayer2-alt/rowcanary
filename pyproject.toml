@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rowcanary"
-version = "0.2.0"
+version = "0.3.0"
 description = "Detect silent data corruption in CSV import/export workflows with control samples"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -34,10 +34,14 @@ Changelog = "https://github.com/spockplayer2-alt/rowcanary/blob/main/CHANGELOG.m
 rowcanary = "rowcanary.cli:main"
 
 [project.optional-dependencies]
-dev = ["build>=1.2", "ruff>=0.11", "twine>=6"]
+dev = ["build>=1.2", "ruff>=0.11", "twine>=6", "jsonschema>=4.23,<5"]
+test = ["jsonschema>=4.23,<5"]
 
 [tool.setuptools]
 packages = ["rowcanary"]
+
+[tool.setuptools.package-data]
+rowcanary = ["*.json"]
 
 [tool.ruff]
 target-version = "py310"

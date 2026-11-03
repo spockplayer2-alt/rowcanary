@@ -1,4 +1,22 @@
-# Release verification — 2026-11-02
+# Release verification
+
+## v0.3.0 — 2026-11-03
+
+Local suite: 96 tests, including classifications and conservative rounding/date
+diagnostics, schema validation, batch exit precedence, deterministic escaped
+HTML, exclusive JSON/HTML reports and a native Windows dangling-symlink
+regression. The latter first reproduced creation of the symlink target, then
+passed with the same explicit guard used by control-file generation.
+
+Release gates also check Ruff, wheel/sdist contents (including the schema),
+Twine, secret patterns and clean wheel/sdist CLI installation. Each GitHub
+release is gated on the complete 17-job hosted matrix for its exact commit.
+Public attachment hashes are verified after publication; see `PROGRESS.md`
+and each release's verification paragraph for the resulting run and commit.
+Runtime dependencies remain openpyxl, et-xmlfile and defusedxml. Real
+spreadsheet/CRM round trips are still unverified.
+
+## Historical v0.1.0 verification — 2026-11-02
 
 This report describes the reviewed source in this release preparation. The
 original source had 21 tests. The current suite has 65 tests, including parser,

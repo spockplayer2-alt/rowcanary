@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0] - 2026-11-03
+
+- Add evidence-based classifications, severity, scalar types, observations,
+  tentative possible causes and practical guidance without changing issue codes.
+- Observe reordered rows without failing by default; add opt-in `--strict-order`.
+- Add deterministic, escaped standalone HTML and JSON exports with exclusive
+  creation through `check --report` and `batch --report`.
+- Check multiple files with `batch`, retaining every result; operational errors
+  take exit-code precedence over integrity differences.
+- Package report JSON Schema 1.0 and validate real single and batch reports.
+- Keep schema validation a test dependency; runtime dependencies are unchanged.
+
 ## [0.2.0] - 2026-11-02
 
 - Generate and audit CSV, TSV, JSON, JSONL and single-sheet XLSX files.

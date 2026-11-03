@@ -14,6 +14,7 @@ from . import __version__
 from .core import ProbeFileError, check_file, write_probes, ID_COLUMN, VALUE_COLUMN
 from .formats import FORMATS
 from .probes import select_probes
+from .reporting import export_report
 
 
 def _print_human(message: str, *, file: TextIO | None = None) -> None:
@@ -42,6 +43,8 @@ def render_report(report, *, output_json: bool = False) -> None:
                 _print_human(f"    actual:   {issue.actual!r}")
     else:
         _print_human("  No changes detected in the test values.")
+    for observation in report.observations:
+        _print_human(f"  [{observation.severity}:{observation.code}] {observation.reason}")
     _print_human("  Scope: only the provided control samples, not an entire real dataset.")
 
 
@@ -82,11 +85,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     checker = sub.add_parser("check", help="Audit an exported control file")
     checker.add_argument("input", type=Path)
-    for command in (maker, checker):
+    batch = sub.add_parser("batch", help="Audit several exports and retain every result")
+    batch.add_argument("inputs", type=Path, nargs="+")
+    for command in (maker, checker, batch):
         command.add_argument("--format", choices=("auto", *FORMATS), default="auto")
         command.add_argument(
             "--encoding",
-            default="utf-8-sig" if command is checker else "utf-8",
+            default="utf-8" if command is maker else "utf-8-sig",
             help="Text encoding (BOM encodings detected when checking)",
         )
         command.add_argument(
@@ -97,12 +102,23 @@ def main(argv: list[str] | None = None) -> int:
         command.add_argument(
             "--custom-values", type=Path, help="JSON array of custom {id, value} controls"
         )
-    checker.add_argument("--id-column", default=ID_COLUMN)
-    checker.add_argument("--value-column", default=VALUE_COLUMN)
-    checker.add_argument(
-        "--delimiter", default=",", help="CSV field separator: one character (default: comma)"
-    )
-    checker.add_argument("--json", action="store_true", help="Print a machine-readable JSON report")
+    for command in (checker, batch):
+        command.add_argument("--id-column", default=ID_COLUMN)
+        command.add_argument("--value-column", default=VALUE_COLUMN)
+        command.add_argument(
+            "--delimiter", default=",", help="CSV field separator (default: comma)"
+        )
+        command.add_argument(
+            "--json", action="store_true", help="Print a machine-readable JSON report"
+        )
+        command.add_argument(
+            "--strict-order",
+            action="store_true",
+            help="Treat reordered rows as an integrity difference",
+        )
+        command.add_argument(
+            "--report", type=Path, help="Create a new standalone .html or .json report"
+        )
     sub.add_parser("demo", help="Run a self-contained example with intentionally broken values")
     args = parser.parse_args(argv)
     try:
@@ -124,21 +140,49 @@ def main(argv: list[str] | None = None) -> int:
                 "by spreadsheet software; use only in isolated test data."
             )
             return 0
-        if args.command == "check":
-            report = check_file(
-                args.input,
+        if args.command in ("check", "batch"):
+            options = dict(
                 file_format=args.format,
                 id_column=args.id_column,
                 value_column=args.value_column,
                 delimiter=args.delimiter,
                 encoding=args.encoding,
                 probes=select_probes(args.probe_set, args.custom_values),
+                strict_order=args.strict_order,
             )
-            render_report(report, output_json=args.json)
-            return 0 if report.ok else 1
+            if args.command == "check":
+                report = check_file(args.input, **options)
+                if args.report:
+                    export_report(args.report, [report])
+                render_report(report, output_json=args.json)
+                return 0 if report.ok else 1
+            results = []
+            status = 0
+            for path in args.inputs:
+                try:
+                    report = check_file(path, **options)
+                    results.append(report.as_dict())
+                    status = max(status, 0 if report.ok else 1)
+                    if not args.json:
+                        _print_human(str(path))
+                        render_report(report)
+                except (ProbeFileError, OSError) as exc:
+                    results.append({"input": str(path), "error": str(exc)})
+                    status = 2
+                    if not args.json:
+                        _print_human(f"{path}: {exc}", file=sys.stderr)
+            if args.report:
+                export_report(args.report, results, batch=True)
+            if args.json:
+                print(
+                    json.dumps(
+                        {"schema_version": "1.0", "results": results}, ensure_ascii=True, indent=2
+                    )
+                )
+            return status
         return demo()
     except (ProbeFileError, OSError) as exc:
-        if args.command == "check" and args.json:
+        if args.command in ("check", "batch") and args.json:
             print(json.dumps({"error": str(exc)}, ensure_ascii=True, indent=2))
         else:
             _print_human(f"rowcanary: {exc}", file=sys.stderr)

@@ -52,7 +52,7 @@ python -m pip install .
 rowcanary --version
 ```
 
-The version output is `rowcanary 0.2.0`. Use a virtual environment if your Python
+The version output is `rowcanary 0.3.0`. Use a virtual environment if your Python
 installation requires one. If the console script is not on your `PATH`, use
 `python -m rowcanary` with the Python interpreter that installed the package.
 You can also run the module directly from the extracted source directory.
@@ -135,7 +135,8 @@ content is used for files with unknown extensions.
 | `1` | The export was read, but integrity differences were found |
 | `2` | Invalid input, command usage or an I/O error |
 
-Normal JSON reports contain `ok`, `passed`, `total`, `input` and `issues`.
+Normal JSON reports contain `schema_version`, `ok`, `passed`, `total`, `input`,
+`issues` and non-failing `observations`.
 For input or I/O errors, `check --json` writes `{"error": "..."}` to stdout and
 exits 2. Argument-parsing errors use the usual stderr usage message. Human
 reports escape terminal control characters and characters the output encoding
@@ -147,7 +148,11 @@ cannot represent. JSON escapes preserve the original Unicode values.
 | --- | --- |
 | Generate / check | CSV, TSV, JSON array of objects, JSONL, XLSX |
 | Input encoding | UTF-8, UTF-16/32 with BOM; explicit `--encoding` for legacy text |
-| Report | Human-readable text or JSON |
+| Report | Human-readable text, versioned JSON or standalone HTML |
+
+See [reports and batch checks](docs/reporting.md) for diagnostic fields, the
+packaged JSON Schema, `--strict-order`, exclusive `--report` exports and batch
+exit-code precedence.
 
 CSV quoting, embedded delimiters, escaped double quotes and embedded line
 breaks are parsed. Line breaks **inside values** are compared exactly, including

@@ -6,9 +6,9 @@ green hosted matrix and verified wheel, sdist, source ZIP and checksums. No PyPI
 publication is authorized. No customer data or credentials enter test fixtures.
 
 - [x] 0.1.1: enforce JSON field bounds and column validation; regression tests.
-- [ ] 0.2.0: CSV/TSV/JSON/JSONL/XLSX adapters, explicit encoding/format,
+- [x] 0.2.0: CSV/TSV/JSON/JSONL/XLSX adapters, explicit encoding/format,
   deterministic extended/custom probe sets and typed comparisons.
-- [ ] 0.3.0: evidence-based diagnostics, severity, JSON schema, safe HTML,
+- [x] 0.3.0: evidence-based diagnostics, severity, JSON schema, safe HTML,
   report export, batch checks and documented exit status.
 - [ ] 0.4.0: loopback-only local web UI with upload, generation, comparison,
   downloads, accessible themes and no external resources.

@@ -62,9 +62,20 @@ class Issue:
     reason: str
     expected: str | None = None
     actual: str | None = None
+    severity: str = "error"
+    classifications: tuple[str, ...] = ()
+    observation: str = ""
+    possible_causes: tuple[str, ...] = ()
+    guidance: str = "Inspect the export settings and compare the control before and after."
+    expected_type: str | None = None
+    actual_type: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        result = asdict(self)
+        result["classifications"] = list(self.classifications or (self.code,))
+        result["possible_causes"] = list(self.possible_causes)
+        result["observation"] = self.observation or self.reason
+        return result
 
 
 @dataclass(frozen=True)
@@ -73,6 +84,7 @@ class Report:
     total: int
     issues: tuple[Issue, ...]
     input_path: str
+    observations: tuple[Issue, ...] = ()
 
     @property
     def ok(self) -> bool:
@@ -80,11 +92,13 @@ class Report:
 
     def as_dict(self) -> dict[str, Any]:
         return {
+            "schema_version": "1.0",
             "ok": self.ok,
             "passed": self.passed,
             "total": self.total,
             "input": self.input_path,
             "issues": [issue.as_dict() for issue in self.issues],
+            "observations": [issue.as_dict() for issue in self.observations],
         }
 
 
@@ -260,7 +274,9 @@ def check_file(
     delimiter: str = ",",
     probes=PROBES,
     encoding: str = "utf-8-sig",
+    strict_order: bool = False,
 ) -> Report:
+    from .diagnostics import diagnose
     from .formats import load_rows
     from .probes import validate_probes
 
@@ -283,6 +299,7 @@ def check_file(
     expected = {probe.ident: probe for probe in probes}
     seen: set[str] = set()
     issues: list[Issue] = []
+    order: list[str] = []
     passed = 0
     for index, row in enumerate(rows, start=2):
         if id_column not in row or value_column not in row:
@@ -309,6 +326,7 @@ def check_file(
             issues.append(Issue("unexpected", ident, "Unexpected row was added"))
             continue
         probe = expected[ident]
+        order.append(ident)
         actual_value = row[value_column]
         expected_value = (
             ("" if probe.value is None else str(probe.value))
@@ -324,6 +342,7 @@ def check_file(
                     probe.reason,
                     expected=_display_value(expected_value),
                     actual=actual_display,
+                    **diagnose(expected_value, actual_value),
                 )
             )
         else:
@@ -335,7 +354,26 @@ def check_file(
                     "missing", ident, "Probe row was dropped", expected=_display_value(probe.value)
                 )
             )
-    return Report(passed=passed, total=len(probes), issues=tuple(issues), input_path=str(path))
+    observations = ()
+    if order != [ident for ident in expected if ident in seen]:
+        reordered = Issue(
+            "reordered",
+            "rows",
+            "Control rows appear in a different order",
+            severity="error" if strict_order else "info",
+            guidance="Disable sorting in the exporter if row order matters to your workflow.",
+        )
+        if strict_order:
+            issues.append(reordered)
+        else:
+            observations = (reordered,)
+    return Report(
+        passed=passed,
+        total=len(probes),
+        issues=tuple(issues),
+        input_path=str(path),
+        observations=observations,
+    )
 
 
 def _display_value(value) -> str:
