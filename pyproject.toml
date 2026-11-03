@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rowcanary"
-version = "0.7.0"
+version = "0.8.0"
 description = "Detect silent data corruption in CSV import/export workflows with control samples"
 readme = "README.md"
 requires-python = ">=3.10"

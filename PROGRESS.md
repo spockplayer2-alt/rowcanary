@@ -1,6 +1,6 @@
 # Development progress
 
-Target: v1.0.0. Current published version: **v0.6.0**.
+Target: v1.0.0. Current published version: **v0.7.0**.
 
 **Resumed on 2026-11-03 with v0.3.0.** Work proceeds sequentially through the
 existing roadmap; no PyPI publication is authorized.
@@ -237,3 +237,16 @@ No milestone after v0.6.0 has been implemented or released. Resume at v0.7.0.
 - Existing Excel round-trip defects remain observable differences, not normalized.
 - Local verification: 19 focused tests (configuration/CLI/documentation), lint/format,
   Twine, archive/secret checks and clean wheel/sdist CLI/API/HTTP installs.
+
+## Published v0.7.0 / v0.8.0 candidate
+
+- v0.7.0 commit `5fda0a1`, hosted run **41680640926**, all 17 jobs passed.
+  Published https://github.com/spockplayer2-alt/rowcanary/releases/tag/v0.7.0;
+  all four public artifact hashes verified. No PyPI publication.
+- v0.8.0 adds first-run/Excel/troubleshooting guidance and actual screenshots.
+- Actual Edge reproduced stale PASS after mode changes; fixed and retested.
+  Generated upload passed 24/24; altered file returned 21/24, three issues;
+  downloaded JSON/HTML verified. Keyboard, labels, busy/error announcements,
+  reduced motion and mobile overflow passed. Screenshots inspected.
+- Local/browser evidence: `.local/ui-stale.cjs`, `.local/ui-final.cjs`,
+  `output/playwright/v0.8-*`; published captures in `docs/screenshots/`.

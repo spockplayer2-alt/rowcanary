@@ -50,3 +50,15 @@ already running as your user. Stop the server when finished.
 
 Browser evidence covers the project's own generation/upload/check/download UI.
 It does not establish how Excel, Google Sheets, LibreOffice or a CRM behaves.
+
+Changing the operation or any input clears the previous report. Fields are
+locked during a request; busy state and input errors are announced. Results
+receive keyboard focus. See the [quick start](quickstart.md) for troubleshooting.
+
+Actual Edge captures (2026-11-03): desktop light at 1280px and mobile dark at
+390px, using synthetic controls only. The mobile result shows three deliberate
+changes, not an external application's results.
+
+![Desktop control generation](screenshots/desktop.png)
+
+![Mobile dark-theme comparison with three deliberate differences](screenshots/mobile-dark.png)

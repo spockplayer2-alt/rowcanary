@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.0] - 2026-11-03
+
+- Add a complete first-run guide, spreadsheet guidance and troubleshooting.
+- Clear stale browser reports after input/mode changes; lock fields while busy
+  and announce errors assertively. Retain keyboard focus and both themes.
+- Include actual desktop/mobile screenshots and verify browser generation,
+  PASS/FAIL, report downloads, labels, skip-link focus and reduced motion.
+
 ## [0.7.0] - 2026-11-03
 
 - Stabilize public Python imports and add immutable, validated Config/load_config.

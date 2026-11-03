@@ -61,6 +61,9 @@ def check(directory: Path) -> None:
         "examples/integration.py",
         "examples/github-actions.yml",
         "docs/integrations.md",
+        "docs/quickstart.md",
+        "docs/screenshots/desktop.png",
+        "docs/screenshots/mobile-dark.png",
     }
     if not modules <= wheel or not required <= source:
         raise SystemExit(

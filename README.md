@@ -251,3 +251,5 @@ uses outlined Noto Sans glyphs; its [font license](assets/FONT-LICENSE.txt) is
 included.
 
 Reusable JSON options, Python API and batch/Actions examples: [integration guide](docs/integrations.md).
+
+Start here: [first control check and troubleshooting](docs/quickstart.md).

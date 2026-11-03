@@ -17,6 +17,7 @@ themeButton.addEventListener('click', () => {
   try { localStorage.setItem('rowcanary-theme', value); } catch (_) {}
 });
 function setMode(value) {
+  if (mode !== value) clearReport();
   mode = value;
   $('step-make').classList.toggle('active', mode === 'make');
   $('step-check').classList.toggle('active', mode === 'check');
@@ -33,6 +34,11 @@ function setMode(value) {
 }
 $('step-make').addEventListener('click', () => setMode('make'));
 $('step-check').addEventListener('click', () => setMode('check'));
+function clearReport() {
+  current = null;
+  $('results').hidden = true;
+}
+$('controls').addEventListener('input', clearReport);
 $('upload').addEventListener('change', () => {
   const file = $('upload').files[0];
   const extension = file?.name.split('.').pop().toLowerCase();
@@ -94,7 +100,11 @@ $('controls').addEventListener('submit', async event => {
   const operation = mode;
   $('submit').disabled = true;
   $('step-make').disabled = $('step-check').disabled = true;
+  $('controls').setAttribute('aria-busy', 'true');
+  for (const field of $('controls').querySelectorAll('input,select,textarea')) field.disabled = true;
   if (operation === 'check') { current = null; $('results').hidden = true; }
+  $('status').setAttribute('role', 'status');
+  $('status').setAttribute('aria-live', 'polite');
   $('status').classList.remove('error');
   $('status').textContent = 'Working locally…';
   try {
@@ -123,9 +133,17 @@ $('controls').addEventListener('submit', async event => {
       $('status').textContent = 'Check complete. Reports are ready to download.';
     }
   } catch (error) {
+    $('status').setAttribute('role', 'alert');
+    $('status').setAttribute('aria-live', 'assertive');
     $('status').textContent = error.message;
     $('status').classList.add('error');
-  } finally { $('submit').disabled = false; $('step-make').disabled = $('step-check').disabled = false; }
+  } finally {
+    $('submit').disabled = false;
+    $('step-make').disabled = $('step-check').disabled = false;
+    for (const field of $('controls').querySelectorAll('input,select,textarea')) field.disabled = false;
+    $('id-column').disabled = $('value-column').disabled = mode === 'make';
+    $('controls').setAttribute('aria-busy', 'false');
+  }
 });
 $('download-json').addEventListener('click', () => { if (current) download(JSON.stringify(current.report, null, 2) + '\n', 'rowcanary-report.json', 'application/json'); });
 $('download-html').addEventListener('click', () => { if (current) download(current.html, 'rowcanary-report.html', 'text/html'); });

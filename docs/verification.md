@@ -1,5 +1,19 @@
 # Release verification
 
+## v0.7.0 / v0.8.0 — 2026-11-03
+
+v0.7.0 passed 19 focused local tests and all 17 hosted jobs in run 41680640926.
+All four public artifacts were downloaded and their hashes verified. Clean
+wheel/sdist installs exercised public configuration/API, CLI and HTTP assets.
+
+v0.8.0 browser checks ran in actual Edge: generated/downloaded/uploaded controls
+passed 24/24; altered.csv produced the expected 21/24 and three issues in both
+downloaded JSON and HTML. A stale-PASS regression failed before the UI fix and
+passed afterward. Checked keyboard skip/focus, form labels, busy/error state,
+reduced motion and 390px dark-theme overflow; both screenshots were inspected.
+The single HTTP 400 console entry was the deliberately malformed custom JSON.
+This is targeted accessibility verification, not a screen-reader or WCAG audit.
+
 ## v0.6.0 — 2026-11-03
 
 Thirteen synthetic fixtures and two native Excel CSV outputs carry SHA-256

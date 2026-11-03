@@ -1,6 +1,6 @@
 """Detect silent changes in imported and exported data using control samples."""
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 from .core import PROBES, ProbeFileError, Report, check_file, write_probes
 from .core import ID_COLUMN, VALUE_COLUMN, Issue, Probe
